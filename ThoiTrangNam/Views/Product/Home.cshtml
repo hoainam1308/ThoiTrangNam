@@ -1,0 +1,20 @@
+﻿@model IEnumerable<ThoiTrangNam.Models.Product>
+
+@{
+    ViewData["Title"] = "Home";
+}
+<h2>Home</h2>
+<div class="row">
+    @foreach (var product in Model)
+    {
+        <div class="col-md-4">
+            <div class="card mb-4 shadow-sm">
+                <a asp-action="Details" asp-route-id="@product.ProductId"><img class="card-img-top" src="@product.ImageUrl" alt="Product image"></a>
+                <div class="card-body">
+                    <h5 class="card-title">@product.ProductName</h5>
+                    <p class="card-text">Giá: @product.SellPrice</p>
+                </div>
+            </div>
+        </div>
+    }
+</div>
