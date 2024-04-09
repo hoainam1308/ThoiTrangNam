@@ -1,8 +1,51 @@
-﻿@{
+﻿@model IEnumerable<ThoiTrangNam.Models.Product>
+@{
     ViewData["Title"] = "Home Page";
 }
+<section class="py—2">
+    <div class="container px-4 px-lg-5 mt-5">
+        <div class="row gx—4 gx—lg—5 row-cols—2 row—cols—md—3 row—cols—xl-4 justify—content-center">
+            @foreach (var item in Model)
+            {
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
-</div>
+                /*
+                <div class="item-thumb" p="10931" in-stock="1"
+                     data-href="https://4menshop.com/ao-vest-nam/ao-vest-nazafu-mau-xam-av1139-10931.html"
+                     data-name="&Aacute;o Vest NAZAFU M&agrave;u X&aacute;m AV1139">
+                    <div class="thumb-img" in-stock="1"
+                         image2-src="cache/image/300x400/images/thumbs/2019/08/ao-vest-nazafu-mau-da-bo-1139_2_small-10931.JPG"
+                         image2-alt="Áo Vest NAZAFU Màu Xám AV1139 Thum 2">
+                        <a href="https://4menshop.com/ao-vest-nam/ao-vest-nazafu-mau-xam-av1139-10931.html"
+                           title="Áo Vest NAZAFU Màu Xám AV1139">
+                            <img src="https://4menshop.com/cache/image/300x400/images/thumbs/2019/08/ao-vest-nazafu-mau-da-bo-1139_small-10931.JPG"
+                                 alt="Áo Vest NAZAFU Màu Xám AV1139"
+                                 srcset="/cache/image/165x220/images/thumbs/2019/08/ao-vest-nazafu-mau-da-bo-1139-10931.JPG 165w, /cache/image/173x230/images/thumbs/2019/08/ao-vest-nazafu-mau-da-bo-1139-10931.JPG 173w, /cache/image/185x247/images/thumbs/2019/08/ao-vest-nazafu-mau-da-bo-1139-10931.JPG 185w, /cache/image/300x400/images/thumbs/2019/08/ao-vest-nazafu-mau-da-bo-1139-10931.JPG 300w"
+                                 sizes="(max-width: 300px) 100vw, 300px" />
+                        </a>
+                    </div> <a href="https://4menshop.com/ao-vest-nam/ao-vest-nazafu-mau-xam-av1139-10931.html"
+                              track="QuickView-10931"
+                              class="overlay-rmore s-fa s-fa-s18 s-fa-shopping-cart addcart quickBuy"
+                              product="10931" title="Mua Áo Vest NAZAFU Màu Xám AV1139">&nbsp;</a>
+                </div>
+                */
+                <div class="col mb-5">
+                    <div class="card gap-3" style="width: 18rem">
+                        <img src="@item.ImageUrl" class="card-img-top" alt="..." style="height: 300px">
+                        <div class="card-body">
+                            <h5 class:"card-title">
+                                @Html.DisplayFor(modelItem => item.ProductName)
+                            </h5>
+                            <div class="d-flex">
+                                <span>Price: </span>
+                                <p class="mx—3">@item.SellPrice.ToString("#,##0") Vnđ</p>
+                            </div>
+                            <a asp-controller="Cart" asp-action="AddToCart" asp-route-productId="@item.ProductId">
+                                <button class="btn btn-outline-dark"><i class="bi bi-cart-fill"></i> Add to Cart</button>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+</section>

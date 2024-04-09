@@ -1,0 +1,41 @@
+﻿@model Cart
+<h2>Your Cart</h2>
+@if (Model != null && Model.Items.Any())
+{
+    <div class="table-responsive">
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>Product</th>
+                    <th>Quantity</th>
+                    <th>Price</th>
+                    <th>Total</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model?.Items ?? Enumerable.Empty<CartItem>())
+                {
+                    <tr>
+                        <td>@item.Product.ProductName</td>
+                        <td>@item.Quantity</td>
+                        <td>@item.Product.SellPrice.ToString("#,##0") VNĐ</td>
+                        <td>@((item.Product.SellPrice * item.Quantity).ToString("#,##0")) VNĐ</td>
+                        <td>
+                            <a href="/Cart/RemoveFromCart/?productId=@item.Product.ProductId" class="btn btn-sm btn-danger">Remove</a>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+    <div class="text-end">
+        <form asp-action="Checkout" method="get">
+            <button type="submit" class="btn btn-primary">Checkout</button>
+        </form>
+    </div>
+}
+else
+{
+    <p>Your cart is empty.</p>
+}

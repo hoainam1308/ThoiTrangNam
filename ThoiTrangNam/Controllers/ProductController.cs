@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Http.HttpResults;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using ThoiTrangNam.Models;
@@ -24,12 +25,13 @@ namespace ThoiTrangNam.Controllers
             var products = await _productRepository.GetAllAsync();
             return View(products);
         }
+        [Authorize(Roles = SD.Role_Admin)]
         public async Task<IActionResult> Index()
         {
             var products = await _productRepository.GetAllAsync();
             return View(products);
         }
-
+        
         // Hien thi form them san pham mdi
         public async Task<IActionResult> Create()
         {

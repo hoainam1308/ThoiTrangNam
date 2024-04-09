@@ -5,14 +5,32 @@
 }
 <h2>Home</h2>
 <div class="row">
-    @foreach (var product in Model)
+    @foreach (var item in Model)
     {
-        <div class="col-md-4">
-            <div class="card mb-4 shadow-sm">
-                <a asp-action="Details" asp-route-id="@product.ProductId"><img class="card-img-top" src="@product.ImageUrl" alt="Product image"></a>
+        <div class="col-md-4 mb-4">
+            <div class="product-card">
+                <a asp-action="Details" asp-route-id="@item.ProductId">
+                    <img class="card-img-top" src="@item.ImageUrl" alt="Product image" >
+                </a>
                 <div class="card-body">
-                    <h5 class="card-title">@product.ProductName</h5>
-                    <p class="card-text">Giá: @product.SellPrice</p>
+                    <h5 class:"card-title overflow-ellipsis">
+                        @if (!string.IsNullOrEmpty(item.ProductName) && item.ProductName.Length > 31)
+                        {
+                            string parameterValue = item.ProductName.ToString().Substring(0, 31);
+
+                            @Html.DisplayFor(modelItem=>parameterValue)
+
+                            @:...
+                        }
+                        else
+                        {
+                            @Html.DisplayFor(modelItem => item.ProductName)
+                        }
+                    </h5>
+                <p class="mx—3" style="text-align:center">Price: @item.SellPrice.ToString("#,##0") VNĐ</p>
+                <a asp-controller="Cart" asp-action="AddToCart" asp-route-productId="@item.ProductId">
+                    <button class="btn btn-outline-dark"><i class="bi bi-cart-fill"></i> Add to Cart</button>
+                </a>
                 </div>
             </div>
         </div>

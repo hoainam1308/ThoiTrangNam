@@ -1,6 +1,7 @@
 ﻿using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Text.Json.Serialization;
 
 namespace ThoiTrangNam.Models
 {
@@ -31,13 +32,14 @@ namespace ThoiTrangNam.Models
 
         [DisplayName("Hình ảnh")]
         public string? ImageUrl { get; set; }
-
+        [JsonIgnore]
         public List<ProductImage>? Images { get; set; }
 
         [ForeignKey("Category")]
         [DisplayName("Mã danh mục")]
         public int CategoryId { get; set; }
 
+        [JsonIgnore]
         [DisplayName("Danh mục")]
         public Category? Category { get; set; }
     }
