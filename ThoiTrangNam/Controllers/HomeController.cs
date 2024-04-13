@@ -19,10 +19,6 @@ namespace ThoiTrangNam.Controllers
             _classificationRepository = classificationRepository;
             _productImageRepository = productImageRepository;
         }
-        public async Task<IActionResult> Test()
-        {
-            return View();
-        }
         public async Task<IActionResult> Index()
         {
         var products = await _productRepository.GetAllAsync();
@@ -42,6 +38,36 @@ namespace ThoiTrangNam.Controllers
             }
             product.Images = await _productImageRepository.GetImagesByProductIdAsync(id);
             return View(product);
+        }
+        public async Task<IActionResult> IndexByCate(int id)
+        {
+            var products = await _productRepository.GetByCateIdAsync(id);
+            return View("Index", products);
+        }
+        public async Task<IActionResult> IndexByClassifi(int id)
+        {
+            var products = await _productRepository.GetByClassifiIdAsync(id);
+            return View("Index", products);
+        }
+        public async Task<IActionResult> ContactUs()
+        {
+            return View("Index");
+        }
+        [HttpPost]
+        public async Task<IActionResult> ContactUs(string name, string email, string subject, string message)
+        {
+            return View("Index");
+        }
+
+
+        public async Task<IActionResult> CategoryPartial()
+        {
+            var categories = await _categoryRepository.GetAllAsync();
+            return View(categories);
+        }
+        public async Task<IActionResult> Test()
+        {
+            return View();
         }
         public IActionResult Privacy()
         {

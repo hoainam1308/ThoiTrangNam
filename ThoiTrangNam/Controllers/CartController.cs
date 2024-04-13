@@ -94,7 +94,8 @@ namespace ThoiTrangNam.Controllers
             var user = await _userManager.GetUserAsync(User);
             order.UserId = user.Id;
             order.OrderDate = DateTime.UtcNow;
-            order.TotalPrice = cart.ComputeToTalValue();
+            order.SubTotal = cart.ComputeToTalValue();
+            order.TotalPrice = cart.ComputeToTotal();
             _context.Orders.Add(order);
             await _context.SaveChangesAsync();
             
@@ -118,7 +119,6 @@ namespace ThoiTrangNam.Controllers
         }
         public IActionResult OrderCompleted(int orderId)
         {
-            // Hiển thị trang xác nhận đơn hàng
             return View(orderId);
         }
 

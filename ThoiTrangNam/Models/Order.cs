@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc.ModelBinding.Validation;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace ThoiTrangNam.Models
@@ -8,7 +9,11 @@ namespace ThoiTrangNam.Models
         public int Id { get; set; }
         public string UserId { get; set; }
         public DateTime OrderDate { get; set; }
+        public decimal SubTotal { get; set; }
         public decimal TotalPrice { get; set; }
+        public string CustomerName { get; set; }
+        [Phone]
+        public string PhoneNumber { get; set; }
         public string ShippingAddress { get; set; }
         public string Notes { get; set; }
         [ForeignKey("UserId")]

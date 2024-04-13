@@ -36,11 +36,22 @@ namespace ThoiTrangNam.Repository
         {
             return await _context.Products.Include(x => x.Category).SingleOrDefaultAsync(x => x.ProductId == id);
         }
-
         public async Task UpdateAsync(Product product)
         {
             _context.Products.Update(product);
             await _context.SaveChangesAsync();
+        }
+        public async Task<IEnumerable<Product>> GetByCateIdAsync(int id)
+        {
+            return await _context.Products
+            .Where(pi => pi.CategoryId == id)
+            .ToListAsync();
+        }
+        public async Task<IEnumerable<Product>> GetByClassifiIdAsync(int id)
+        {
+            return await _context.Products
+            .Where(pi => pi.Category.ClassificationId == id)
+            .ToListAsync();
         }
     }
 }

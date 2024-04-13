@@ -4,11 +4,11 @@ using ThoiTrangNam.Models;
 
 namespace ThoiTrangNam.Components
 {
-    public class SomeOtherProduct: ViewComponent
+    public class CateComponent: ViewComponent
     {
         public IViewComponentResult Invoke()
         {
-            return View(HttpContext.Session.GetObjectFromJson<Cart>("cart"));
+            return View(HttpContext.Session.GetObjectFromJson<Category>("cate"));
         }
     }
 }

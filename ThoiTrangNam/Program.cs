@@ -26,6 +26,7 @@ builder.Services.AddScoped<ICategoryRepository, EFCategoryRepository>();
 
 builder.Services.AddScoped<IClassificationRepository, EFClassificationRepository>();
 builder.Services.AddScoped<IProductImageRepository, EFProductImageRepository>();
+builder.Services.AddScoped<IOrderRepository, EFOrderRepository>();
 // Add services to the container.
 builder.Services.AddDistributedMemoryCache();
 builder.Services.AddSession(options =>

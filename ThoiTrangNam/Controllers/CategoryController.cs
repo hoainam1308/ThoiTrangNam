@@ -37,5 +37,10 @@ namespace ThoiTrangNam.Controllers
             var categories = await _categoryRepository.GetAllAsync();
             return View(categories);
         }
+        public async Task<IActionResult> isPartial()
+        {
+            var categories = await _categoryRepository.GetAllAsync();
+            return View(categories);
+        }
     }
 }

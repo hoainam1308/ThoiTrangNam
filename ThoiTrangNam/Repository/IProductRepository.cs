@@ -5,6 +5,8 @@ namespace ThoiTrangNam.Repository
     public interface IProductRepository
     {
         Task<IEnumerable<Product>> GetAllAsync();
+        Task<IEnumerable<Product>> GetByCateIdAsync(int id);
+        Task<IEnumerable<Product>> GetByClassifiIdAsync(int id);
         Task<IEnumerable<Product>> GetSomeAsync();
         Task<Product> GetByIdAsync(int id);
         Task AddAsync(Product product);

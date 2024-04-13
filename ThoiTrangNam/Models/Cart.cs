@@ -27,7 +27,16 @@
             return Items.Sum(e => e.Product.SellPrice * e.Quantity);
         }
 
+        public decimal ComputeToTotal()
+        {
+            if(Items.Sum(e => e.Product.SellPrice * e.Quantity) < 1000000)
+                return Items.Sum(e => e.Product.SellPrice * e.Quantity) + 50000;
+            return Items.Sum(e => e.Product.SellPrice * e.Quantity);
+        }
+
         public void Clear() { Items.Clear(); }
+
+
     }
     public class CartItem
     {

@@ -121,23 +121,38 @@
                     <div class="navbar-nav w-100">
                         <div class="nav-item dropdown dropright">
                             <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown">
-                                Dresses <i class="fa fa-angle-right float-right mt-1"></i>
+                                Áo <i class="fa fa-angle-right float-right mt-1"></i>
                             </a>
                             <div class="dropdown-menu position-absolute rounded-0 border-0 m-0">
-                                <a href="" class="dropdown-item">Men's Dresses</a>
-                                <a href="" class="dropdown-item">Women's Dresses</a>
-                                <a href="" class="dropdown-item">Baby's Dresses</a>
+                                <a href="" class="dropdown-item">Áo thun</a>
+                                <a href="" class="dropdown-item">Áo sơ mi</a>
+                                <a href="" class="dropdown-item">Áo khoác</a>
+                                <a href="" class="dropdown-item">Áo vest</a>
                             </div>
                         </div>
-                        <a href="" class="nav-item nav-link">Shirts</a>
-                        <a href="" class="nav-item nav-link">Jeans</a>
-                        <a href="" class="nav-item nav-link">Swimwear</a>
-                        <a href="" class="nav-item nav-link">Sleepwear</a>
-                        <a href="" class="nav-item nav-link">Sportswear</a>
-                        <a href="" class="nav-item nav-link">Jumpsuits</a>
-                        <a href="" class="nav-item nav-link">Blazers</a>
-                        <a href="" class="nav-item nav-link">Jackets</a>
-                        <a href="" class="nav-item nav-link">Shoes</a>
+                        <div class="nav-item dropdown dropright">
+                            <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown">
+                                Quần <i class="fa fa-angle-right float-right mt-1"></i>
+                            </a>
+                            <div class="dropdown-menu position-absolute rounded-0 border-0 m-0">
+                                <a href="" class="dropdown-item">Quần jeans</a>
+                                <a href="" class="dropdown-item">Quần tây</a>
+                                <a href="" class="dropdown-item">Quần kaki</a>
+                                <a href="" class="dropdown-item">Quần jogger</a>
+                            </div>
+                        </div>
+                        <div class="nav-item dropdown dropright">
+                            <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown">
+                                Phụ kiện <i class="fa fa-angle-right float-right mt-1"></i>
+                            </a>
+                            <div class="dropdown-menu position-absolute rounded-0 border-0 m-0">
+                                <a href="" class="dropdown-item">Thắt lưng</a>
+                                <a href="" class="dropdown-item">Ví da</a>
+                                <a href="" class="dropdown-item">Cà vạt</a>
+                                <a href="" class="dropdown-item">Mắt kính</a>
+                            </div>
+                        </div>
+                        <a asp-controller="Home" asp-action="IndexByClassifi" asp-route-id="3" class="nav-item nav-link">Giày dép</a>
                     </div>
                 </nav>
             </div>
@@ -160,14 +175,26 @@
                                     Pages <i class="fa fa-angle-down mt-1"></i>
                                 </a>
                                 <div class="dropdown-menu bg-primary rounded-0 border-0 m-0">
-                                    <a href="cart.html" class="dropdown-item">Shopping Cart</a>
-                                    <a href="checkout.html" class="dropdown-item">Checkout</a>
+                                    <a href="/Cart/Index" class="dropdown-item">Shopping Cart</a>
+                                    <a href="/Cart/Checkout" class="dropdown-item">Checkout</a>
                                 </div>
                             </div>
                             <a href="contact.html" class="nav-item nav-link">Contact</a>
+                            @if (User.IsInRole("Admin") || User.IsInRole("Employee"))
+                            {
+                                <a href="/Order/Index" class="nav-item nav-link">List Order</a>
+                            }
                             @if (User.IsInRole("Admin"))
                             {
-                                <a href="/Product/Index" class="nav-item nav-link">Manager</a>
+                                <div class="nav-item dropdown">
+                                    <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown">
+                                        Manager <i class="fa fa-angle-down mt-1"></i>
+                                    </a>
+                                    <div class="dropdown-menu bg-primary rounded-0 border-0 m-0">
+                                        <a href="/Product/Index" class="dropdown-item">Product</a>
+                                        <a href="/Category/Index" class="dropdown-item">Category</a>
+                                    </div>
+                                </div>
                             }
                         </div>
                         <div class="navbar-nav ml-auto py-0 d-none d-lg-block">

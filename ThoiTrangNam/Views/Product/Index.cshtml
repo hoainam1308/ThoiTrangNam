@@ -2,10 +2,12 @@
 @{
     ViewData["Title"] = "Index";
 }
-<h1>DANH SÁCH SẢN PHẨM</h1>
-<p>
+<h1>
+    Product
+</h1>
+<h2>
     <a asp-action="Create">Tạo mới</a>
-</p>
+</h2>
 <table class="table">
     <thead>
         <tp>
@@ -35,7 +37,9 @@
                     @Html.DisplayFor(modeIItem => item.ProductName)
                 </td>
                 <td>
-                    @Html.DisplayFor(modelItem => item.SellPrice)
+                    <p>
+                        @item.SellPrice.ToString("#,##0") VNĐ
+                    </p>
                 </td>
                 <td>
                     @Html.DisplayFor(modelItem => item.Description)
@@ -54,4 +58,4 @@
             </tr>
         }
     </tbody>
-    </tab1e>
+</table>
