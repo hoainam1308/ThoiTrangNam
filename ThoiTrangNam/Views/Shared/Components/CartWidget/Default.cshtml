@@ -4,7 +4,12 @@
 @{
 }
 @model Cart
-<a href="/Cart/Index" class="btn border">
-    <i class="bi bi-cart-fill"></i>
-    <span>@Model?.Items.Count</span>
-</a>
+@{
+    int numOfCart = 0;
+    if(Model != null)
+    {
+        numOfCart = Model.Items.Count;
+    }
+}
+<span class="badge text-secondary border border-secondary rounded-circle"
+      style="padding-bottom: 2px;">@numOfCart</span>

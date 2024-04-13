@@ -13,7 +13,7 @@ namespace ThoiTrangNam.Repository
 
         public async Task AddAsync(Product product)
         {
-           _context.Products.Add(product);
+            _context.Products.Add(product);
             await _context.SaveChangesAsync();
         }
 
@@ -28,7 +28,10 @@ namespace ThoiTrangNam.Repository
         {
             return await _context.Products.Include(x => x.Category).ToListAsync();
         }
-
+        public async Task<IEnumerable<Product>> GetSomeAsync()
+        {
+            return await _context.Products.Include(x => x.Category).Take(5).ToListAsync();
+        }
         public async Task<Product> GetByIdAsync(int id)
         {
             return await _context.Products.Include(x => x.Category).SingleOrDefaultAsync(x => x.ProductId == id);

@@ -29,6 +29,11 @@ namespace ThoiTrangNam.Repository
             return await _context.Classifications.ToListAsync();
         }
 
+        public IEnumerable<Classification> GetAll()
+        {
+            return  _context.Classifications.ToList();
+        }
+
         public async Task<Classification> GetByIdAsync(int id)
         {
             return await _context.Classifications.SingleOrDefaultAsync(x => x.ClassificationId == id);

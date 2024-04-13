@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using System.Runtime.CompilerServices;
 using ThoiTrangNam.Extensions;
 using ThoiTrangNam.Models;
 using ThoiTrangNam.Repository;
@@ -14,7 +15,7 @@ namespace ThoiTrangNam.Controllers
         private readonly IProductRepository _productRepository;
         private readonly ApplicationDbContext _context;
         private readonly UserManager<ApplicationUser> _userManager;
-        public CartController(ApplicationDbContext context,UserManager<ApplicationUser> userManager, IProductRepository productRepository)
+        public CartController(ApplicationDbContext context, UserManager<ApplicationUser> userManager, IProductRepository productRepository)
         {
             _productRepository = productRepository;
             _context = context;
@@ -32,7 +33,18 @@ namespace ThoiTrangNam.Controllers
             }
             return View("Cart", Cart);
         }
-        
+        public async Task<IActionResult> RemoveAProductFromCart(int productId)
+        {
+            // Giả sử bạn có phương thức lấy thông tin sản phẩm từ productId
+            var product = await GetProductFromDatabase(productId);
+            if (product != null)
+            {
+                Cart = HttpContext.Session.GetObjectFromJson<Cart>("cart") ?? new Cart();
+                Cart.AddItem(product, -1);
+                HttpContext.Session.SetObjectAsJson("cart", Cart);
+            }
+            return View("Cart", Cart);
+        }
         public IActionResult Index()
         {
             var cart = HttpContext.Session.GetObjectFromJson<Cart>("cart");

@@ -7,8 +7,9 @@ using ThoiTrangNam.Repository;
 
 namespace ThoiTrangNam.Controllers
 {
+    [Authorize(Roles = SD.Role_Admin)]
     public class ProductController : Controller
-    {
+    {      
         private readonly IProductRepository _productRepository;
         private readonly ICategoryRepository _categoryRepository;
         private readonly IClassificationRepository _classificationRepository;
@@ -20,12 +21,24 @@ namespace ThoiTrangNam.Controllers
             _classificationRepository = classificationRepository;
             _productImageRepository = productImageRepository;
         }
+        /*
         public async Task<IActionResult> Home()
         {
             var products = await _productRepository.GetAllAsync();
             return View(products);
         }
-        [Authorize(Roles = SD.Role_Admin)]
+
+        public async Task<IActionResult> Details(int id)
+        {
+            var product = await _productRepository.GetByIdAsync(id);
+            if (product == null)
+            {
+                return NotFound();
+            }
+            product.Images = await _productImageRepository.GetImagesByProductIdAsync(id);
+            return View(product);
+        }
+        */
         public async Task<IActionResult> Index()
         {
             var products = await _productRepository.GetAllAsync();
@@ -41,7 +54,6 @@ namespace ThoiTrangNam.Controllers
             ViewBag.Classifications = new SelectList(classifications, "ClassificationId", "ClassificationName");
             return View();
         }
-
         // X0 ly thém san pham moi
         [HttpPost]
         public async Task<IActionResult> Create(Product product, IFormFile imageUrl, List<IFormFile> Images)
@@ -89,16 +101,7 @@ namespace ThoiTrangNam.Controllers
         }
 
         // Hién thi thong tin chi tiet san pham
-        public async Task<IActionResult> Details(int id)
-        {
-            var product = await _productRepository.GetByIdAsync(id);
-            if (product == null)
-            {
-                return NotFound();
-            }
-            product.Images = await _productImageRepository.GetImagesByProductIdAsync(id);
-            return View(product);
-        }
+        
 
         public async Task<IActionResult> ProductDetails(int id)
         {
@@ -157,8 +160,5 @@ namespace ThoiTrangNam.Controllers
             await _productRepository.DeleteAsync(id);
             return RedirectToAction(nameof(Index));
         }
-
-
-
     }
 }

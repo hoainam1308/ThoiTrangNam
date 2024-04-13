@@ -36,7 +36,7 @@
         <select asp-for="CategoryId" asp-items="ViewBag.Categories" class="form-control"></select>
     </div>
     <div class="form-group">
-        <label asp-for="ImageUrl" class="control-lable" >Product Image</label>
+        <label asp-for="ImageUrl" class="control-lable">Product Image</label>
         <input type="file" asp-for="ImageUrl" class="form-control" />
         <span asp-validation-for="ImageUrl" class="text-danger"></span>
     </div>
@@ -48,7 +48,7 @@
     <div>
         <input type="submit" value="Thêm mới" class="btn btn-primary" />
     </div>
-    
+
 </form>
 <div>
     <a asp-action="Index">Trở về</a>

@@ -1,64 +1,8 @@
 ﻿@page
 @model LoginModel
-
 @{
     ViewData["Title"] = "Log in";
 }
-<style>
-    /* Custom CSS for login form */
-    /* Custom CSS for login form */
-    body {
-        background-color: #f8f9fa; /* Màu nền của trang */
-    }
-
-    #account {
-        background-color: #fff;
-        padding: 20px;
-        border-radius: 10px;
-        box-shadow: 0px 0px 10px 0px rgba(0,0,0,0.1);
-    }
-
-    .form-floating {
-        margin-bottom: 1rem;
-    }
-
-        .form-floating input.form-control {
-            border-radius: 5px;
-        }
-
-    .checkbox {
-        margin-bottom: 1rem;
-    }
-
-    .btn-primary {
-        background-color: #007bff;
-        border-color: #007bff;
-    }
-
-        .btn-primary:hover {
-            background-color: #0056b3;
-            border-color: #0056b3;
-        }
-
-    .text-danger {
-        color: #dc3545; /* Màu của thông điệp lỗi */
-    }
-
-    /* Center the form horizontally */
-    .row {
-        display: flex;
-        justify-content: center;
-    }
-
-    /* Style the header */
-    .header {
-        background-image: url('path/to/image.jpg'); /* Đường dẫn đến hình ảnh header */
-        background-size: cover;
-        padding: 50px;
-        text-align: center;
-        color: #fff;
-    }
-</style>
 <h1>@ViewData["Title"]</h1>
 <div class="row">
     <div class="col-md-4">

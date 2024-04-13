@@ -21,6 +21,7 @@
         {
             Items.RemoveAll(i => i.Product.ProductId == product.ProductId);
         }
+
         public decimal ComputeToTalValue()
         {
             return Items.Sum(e => e.Product.SellPrice * e.Quantity);
