@@ -5,7 +5,8 @@ namespace ThoiTrangNam.Repository
     public interface IOrderRepository
     {
         Task<IEnumerable<Order>> GetAllAsync();
+        Task<IEnumerable<Order>> GetNewAsync();
         Task<Order> GetByIdAsync(int id);
-        Task UpdateAsync(bool orderStatus);
+        Task UpdateAsync(int id, bool orderStatus);
     }
 }

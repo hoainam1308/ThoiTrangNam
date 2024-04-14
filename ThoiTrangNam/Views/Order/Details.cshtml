@@ -8,75 +8,39 @@
         <thead class="thead-dark">
             <tr>
                 <th style="padding-left:240px; text-align:left; width:500px;">Products</th>
-                <th>Quantity</th>
                 <th>Price</th>
+                <th>Quantity</th>
             </tr>
         </thead>
-            <tbody class="align-middle">
+        <tbody class="align-middle">
             @foreach (var item in Model.OrderDetails)
-                {
-                    <tr>
-                        <td style="padding-left:80px; text-align:left; width:800px;">
-                            <img src=@item.Product.ImageUrl alt="" style="width: 50px;">
-                            @if (!string.IsNullOrEmpty(item.Product.ProductName) && item.Product.ProductName.Length > 100)
-                            {
-                                string parameterValue = item.Product.ProductName.ToString().Substring(0, 100);
+            {
+                <tr>
+                    <td style="padding-left:80px; text-align:left; width:800px;">
+                        <img src=@item.Product.ImageUrl alt="" style="width: 50px;">
+                        @if (!string.IsNullOrEmpty(item.Product.ProductName) && item.Product.ProductName.Length > 100)
+                        {
+                            string parameterValue = item.Product.ProductName.ToString().Substring(0, 100);
 
-                                @Html.DisplayFor(modelItem => parameterValue)
+                            @Html.DisplayFor(modelItem => parameterValue)
 
-                                @:...
-                            }
-                            else
-                            {
-                                @Html.DisplayFor(modelItem => item.Product.ProductName)
-                            }
-                        </td>
-                        <td class="align-middle">@item.Price.ToString("#,##0") VNĐ</td>
-                        <td class="align-middle">
-                            @item.Quantity
-                        </td>
-                    </tr>
-                }
-            </tbody>
+                            @:...
+                        }
+                        else
+                        {
+                            @Html.DisplayFor(modelItem => item.Product.ProductName)
+                        }
+                    </td>
+                    <td class="align-middle">@item.Price.ToString("#,##0") VNĐ</td>
+                    <td class="align-middle">
+                        @item.Quantity
+                    </td>
+                </tr>
+            }
+        </tbody>
     </table>
+    <div class="p-3" style="max-width: 700px;">
+        <a class="btn btn-outline-light py-2 px-4 mt-3 animate__animated animate__fadeInUp" href="/Order/ShopConfirm?id=@Model.Id">Xác Nhận</a>
+    </div>
 </div>
 
-@*
-    <table class="table">
-    <thead>
-        <tp>
-            <th>
-                <p>Product</p>
-            </th>
-            <th>
-                <p>Quantity</p>
-            </th>
-            <th>
-                <p>Price</p>
-            </th>
-        </tp>
-    </thead>
-    <tbody>
-        @foreach (var item in Model.OrderDetails)
-        {
-            <tr>
-                <td>
-                    <img src="@item.Product.ImageUrl" alt="Alternate Text" />
-                    @Html.DisplayFor(modeIItem => item.Product.ProductName)
-                </td>
-                <td>
-                    @Html.DisplayFor(modeIItem => item.Product.ProductName)
-                </td>
-                <td>
-                    @Html.DisplayFor(modeIItem => item.Quantity)
-                </td>
-                <td>
-                    <p>
-                        @item.Price.ToString("#,##0") VNĐ
-                    </p>
-                </td>
-            </tr>
-        }
-    </tbody>
-</table>
-*@

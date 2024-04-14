@@ -44,9 +44,9 @@
                             </div>
                             <div class="text-center py-4">
                                 <a class="h6 text-decoration-none text-truncate" asp-action="Details" asp-route-id="@item.ProductId">
-                                    @if (!string.IsNullOrEmpty(item.ProductName) && item.ProductName.Length > 60)
+                                    @if (!string.IsNullOrEmpty(item.ProductName) && item.ProductName.Length > 40)
                                     {
-                                        string parameterValue = item.ProductName.ToString().Substring(0, 57);
+                                        string parameterValue = item.ProductName.ToString().Substring(0, 37);
 
                                         @Html.DisplayFor(modelItem => parameterValue)
 

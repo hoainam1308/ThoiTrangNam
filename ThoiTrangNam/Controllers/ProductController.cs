@@ -58,6 +58,7 @@ namespace ThoiTrangNam.Controllers
         [HttpPost]
         public async Task<IActionResult> Create(Product product, IFormFile imageUrl, List<IFormFile> Images)
         {
+            product.Quantity = 100;
             if (ModelState.IsValid)
             {
                 if (imageUrl != null)
@@ -136,7 +137,6 @@ namespace ThoiTrangNam.Controllers
             {
                 if (imageUrl != null)
                 {
-                    // LUu hinh énh dai dién
                     product.ImageUrl = await SaveImage(imageUrl);
                 }
                 product.RemovedDiacriticsName = StaticClass.LocDau(product.ProductName);

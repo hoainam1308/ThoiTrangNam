@@ -42,7 +42,18 @@
                     </p>
                 </td>
                 <td>
-                    @Html.DisplayFor(modelItem => item.Description)
+                    @if (!string.IsNullOrEmpty(item.Description) && item.Description.Length > 100)
+                    {
+                        string parameterValue = item.Description.ToString().Substring(0, 100);
+
+                        @Html.DisplayFor(modelItem => parameterValue)
+
+                        @:...
+                    }
+                    else
+                    {
+                        @Html.DisplayFor(modelItem => item.Description)
+                    }
                 </td>
                 <td>
                     <img src="@Html.DisplayFor(modelItem => item.ImageUrl)" width="100px" />

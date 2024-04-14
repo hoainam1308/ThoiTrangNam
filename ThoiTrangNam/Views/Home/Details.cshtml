@@ -62,9 +62,8 @@
                     <small class="pt-1">(99 Reviews)</small>
                 </div>
                 <h3 class="font-weight-semi-bold mb-4">@Model.SellPrice.ToString("#,##0") VNĐ</h3>
-                <p class="mb-4">
-                    Short Description
-                </p>                
+                <pre class="mb-4" style="font-family:Arial; 20px;">@Model.Description
+                </pre>                
                 <div class="d-flex align-items-center mb-4 pt-2">
                     <div class="input-group quantity mr-3" style="width: 130px;">
                         <div class="input-group-btn">
@@ -72,15 +71,15 @@
                                 <i class="fa fa-minus"></i>
                             </button>
                         </div>
-                        <input type="text" class="form-control bg-secondary border-0 text-center" value="1">
+                        <input id="numInput" type="text" class="form-control bg-secondary border-0 text-center" value="1">
                         <div class="input-group-btn">
                             <button class="btn btn-primary btn-plus">
                                 <i class="fa fa-plus"></i>
                             </button>
                         </div>
                     </div>
-                    <a asp-controller="Cart" asp-action="AddToCart" asp-route-productId="@Model.ProductId">
-                        <button class="btn btn-primary px-3">
+                    <a>
+                        <button id="addButton" class="btn btn-primary px-3">
                             <i class="fa fa-shopping-cart mr-1"></i> Add To
                             Cart
                         </button>
@@ -228,6 +227,21 @@
 </div>
 <!-- Products End -->
 
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        var addButton = document.getElementById('addButton');
+
+        addButton.addEventListener('click', function () {
+            var numberInput = document.getElementById('numInput');
+
+            var num = numberInput.value;
+
+            window.location.href = "/Cart/AddMoreToCart?productId=" + "@Model.ProductId" + "&num=" + num;
+        });
+    });
+</script>
+
+
 @*
 <script>
     document.addEventListener('DOMContentLoaded', function () {
@@ -276,5 +290,6 @@
         <a asp-controller="Cart" asp-action="AddToCart" asp-route-productId="@Model.ProductId" class="btn btn-primary"><i class="bi bi-cart-plus"></i> Thêm vào giỏ hàng</a>
     </div>
 </div>
+asp-controller="Cart" asp-action="AddToCart" asp-route-productId="@Model.ProductId"
 *@
 

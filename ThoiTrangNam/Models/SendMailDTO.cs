@@ -7,9 +7,9 @@ namespace ThoiTrangNam.Models
         [Required]
         public string Name { get; set; }
         [Required]
-        public string Email = StaticClass.FromEmail;
+        public string Email { get; set; }
         [Required]
-        public string Password = StaticClass.Password;
+        public string Password { get; set; }
         [Required]
         public string Subject { get; set; }
         [Required]

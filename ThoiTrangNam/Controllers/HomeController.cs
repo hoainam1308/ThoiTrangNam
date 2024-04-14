@@ -46,12 +46,12 @@ namespace ThoiTrangNam.Controllers
         public async Task<IActionResult> IndexByCate(int id)
         {
             var products = await _productRepository.GetByCateIdAsync(id);
-            return View("Index", products);
+            return View("Shop", products);
         }
         public async Task<IActionResult> IndexByClassifi(int id)
         {
             var products = await _productRepository.GetByClassifiIdAsync(id);
-            return View("Index", products);
+            return View("Shop", products);
         }
         public async Task<IActionResult> ContactUs()
         {
@@ -68,8 +68,8 @@ namespace ThoiTrangNam.Controllers
                 {
                     client.EnableSsl = true;
                     client.Credentials = new NetworkCredential(sendMailDTO.Email, sendMailDTO.Password);
-
-                    MailMessage message = new MailMessage(sendMailDTO.Email, StaticClass.MyEmail, sendMailDTO.Subject, sendMailDTO.Message);
+                    string subject = sendMailDTO.Name + " " + sendMailDTO.Subject;
+                    MailMessage message = new MailMessage(sendMailDTO.Email, StaticClass.MyEmail, subject, sendMailDTO.Message);
                     client.Send(message);
                     ViewBag.Message = "Mail Send";
                     return RedirectToAction("Index");

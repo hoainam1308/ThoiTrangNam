@@ -20,6 +20,11 @@ namespace ThoiTrangNam.Controllers
             var orders = await _orderRepository.GetAllAsync();
             return View(orders);
         }
+        public async Task<IActionResult> IndexNew()
+        {
+            var orders = await _orderRepository.GetNewAsync();
+            return View("Index", orders);
+        }
         public async Task<IActionResult> Details(int id)
         {
             var order = await _orderRepository.GetByIdAsync(id);
@@ -32,6 +37,17 @@ namespace ThoiTrangNam.Controllers
                 itemt.Product = await _productRepository.GetByIdAsync(itemt.ProductId);
             }
             return View(order);
+        }
+        public async Task<IActionResult> ShopConfirm(int id)
+        {
+            var order = await _orderRepository.GetByIdAsync(id);
+            if (order == null)
+            {
+                return NotFound();              
+            }
+            bool shopConfirm = false;
+            await _orderRepository.UpdateAsync(id, shopConfirm);
+            return RedirectToAction(nameof(Index));
         }
     }
 }

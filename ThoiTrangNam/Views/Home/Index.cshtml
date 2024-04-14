@@ -73,7 +73,9 @@
         <div class="col-lg-3 col-md-6 col-sm-12 pb-1">
             <div class="d-flex align-items-center bg-light mb-4" style="padding: 30px;">
                 <h1 class="fa fa-shipping-fast text-primary m-0 mr-2"></h1>
-                <h5 class="font-weight-semi-bold m-0">Free Shipping</h5>
+                <h5 class="font-weight-semi-bold m-0">Free shipping</h5>
+                <span>&nbsp;</span>
+                <h6 class="font-weight-semi-bold m-0">(for orders over 1M VNĐ)</h6>
             </div>
         </div>
         <div class="col-lg-3 col-md-6 col-sm-12 pb-1">
@@ -107,9 +109,9 @@
                     </div>
                     <div class="text-center py-4">
                         <a class="h6 text-decoration-none text-truncate" asp-action="Details" asp-route-id="@item.ProductId">
-                            @if (!string.IsNullOrEmpty(item.ProductName) && item.ProductName.Length > 20)
+                            @if (!string.IsNullOrEmpty(item.ProductName) && item.ProductName.Length > 25)
                             {
-                                string parameterValue = item.ProductName.ToString().Substring(0, 20);
+                                string parameterValue = item.ProductName.ToString().Substring(0, 22);
 
                                 @Html.DisplayFor(modelItem => parameterValue)
 

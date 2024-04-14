@@ -284,7 +284,6 @@ namespace ThoiTrangNam.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Notes")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime>("OrderDate")
@@ -307,6 +306,9 @@ namespace ThoiTrangNam.Migrations
                     b.Property<string>("UserId")
                         .IsRequired()
                         .HasColumnType("nvarchar(450)");
+
+                    b.Property<bool?>("isConfirm")
+                        .HasColumnType("bit");
 
                     b.HasKey("Id");
 

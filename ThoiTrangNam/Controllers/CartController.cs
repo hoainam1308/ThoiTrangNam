@@ -33,6 +33,17 @@ namespace ThoiTrangNam.Controllers
             }
             return View("Cart", Cart);
         }
+        public async Task<IActionResult> AddMoreToCart(int productId, int num)
+        {
+            var product = await GetProductFromDatabase(productId);
+            if (product != null)
+            {
+                Cart = HttpContext.Session.GetObjectFromJson<Cart>("cart") ?? new Cart();
+                Cart.AddItem(product, num);
+                HttpContext.Session.SetObjectAsJson("cart", Cart);
+            }
+            return View("Cart", Cart);
+        }
         public async Task<IActionResult> RemoveAProductFromCart(int productId)
         {
             // Giả sử bạn có phương thức lấy thông tin sản phẩm từ productId

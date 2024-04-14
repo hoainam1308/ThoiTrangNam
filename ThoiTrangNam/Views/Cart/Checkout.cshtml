@@ -1,4 +1,14 @@
 ﻿@model Order
+@using Microsoft.AspNetCore.Identity
+
+@inject UserManager<ApplicationUser> UserManager
+
+@{
+    var user = await UserManager.GetUserAsync(User);
+    string userName = user?.FullName ?? "Guest";
+    string phone = user?.PhoneNumber ?? "0123456789";
+    string address = user?.Address ?? "123 Street";
+}
 <div class="container-fluid">
     <div class="row px-xl-5">
         <div class="col-12">
@@ -19,15 +29,31 @@
                     <div class="row">
                         <div class="col-md-6 form-group">
                             <label asp-for="CustomerName">Full Name</label>
-                            <input asp-for="CustomerName" class="form-control" type="text" placeholder="John Doe">
+                            <input asp-for="CustomerName" class="form-control" type="text" placeholder="Name" value="@(string.IsNullOrEmpty(Model.CustomerName) ? userName : Model.CustomerName)" required="true">
                         </div>
                         <div class="col-md-6 form-group">
                             <label asp-for="PhoneNumber">Mobile No</label>
-                            <input asp-for="PhoneNumber" class="form-control" type="text" placeholder="+123 456 789">
+                            @if(user.PhoneNumber == null)
+                            {
+                                <input asp-for="PhoneNumber" class="form-control" type="text" placeholder="Phone" required="true">
+                            }
+                            else
+                            {
+                                <input asp-for="PhoneNumber" class="form-control" type="text" placeholder="Phone" value="@user.PhoneNumber" required="true">
+
+                            }
                         </div>
                         <div class="col-md-6 form-group">
                             <label asp-for="ShippingAddress">Address</label>
-                            <input asp-for="ShippingAddress" class="form-control" type="text" placeholder="123 Street">
+                            @if (user.Address == null)
+                            {
+                                <input asp-for="ShippingAddress" class="form-control" type="text" placeholder="Address" required="true">
+                            }
+                            else
+                            {
+                                <input asp-for="ShippingAddress" class="form-control" type="text" placeholder="Address" value="@user.Address" required="true">
+
+                            }
                         </div>
                         <div class="col-md-6 form-group">
                             <label asp-for="Notes">Notes</label>
