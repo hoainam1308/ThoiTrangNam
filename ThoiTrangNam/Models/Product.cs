@@ -15,7 +15,9 @@ namespace ThoiTrangNam.Models
         [Required(ErrorMessage = "Tên sản phẩm là bắt buộc"), StringLength(200, ErrorMessage = "Tên sản phẩm không vượt quá 200 ký tự")]
         [DisplayName("Tên sản phẩm")]
         public string ProductName { get; set; }
-        
+
+        public string? RemovedDiacriticsName { get; set; }
+
         [Range(1000.000, 1000000000.000, ErrorMessage = "Giá bán phải nằm trong khoảng từ 1000.000 đến 1000000000.000")]
         [DisplayName("Giá bán")]
         public decimal SellPrice { get; set; }
@@ -42,5 +44,6 @@ namespace ThoiTrangNam.Models
         [JsonIgnore]
         [DisplayName("Danh mục")]
         public Category? Category { get; set; }
+
     }
 }

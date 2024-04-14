@@ -1,8 +1,12 @@
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.VisualStudio.Web.CodeGenerators.Mvc.Templates.BlazorIdentity.Pages.Manage;
 using System.Diagnostics;
+using System.Net;
+using System.Net.Mail;
 using System.Threading.Channels;
 using ThoiTrangNam.Models;
 using ThoiTrangNam.Repository;
+using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 
 namespace ThoiTrangNam.Controllers
 {
@@ -21,8 +25,8 @@ namespace ThoiTrangNam.Controllers
         }
         public async Task<IActionResult> Index()
         {
-        var products = await _productRepository.GetAllAsync();
-        return View(products);
+            var products = await _productRepository.GetAllAsync();
+            return View(products);
         }
         public async Task<IActionResult> IndexSome()
         {
@@ -51,15 +55,52 @@ namespace ThoiTrangNam.Controllers
         }
         public async Task<IActionResult> ContactUs()
         {
-            return View("Index");
+            return View();
         }
         [HttpPost]
-        public async Task<IActionResult> ContactUs(string name, string email, string subject, string message)
+        public async Task<IActionResult> ContactUs(SendMailDTO sendMailDTO)
         {
-            return View("Index");
+            if (!ModelState.IsValid)
+                return View();
+            try
+            {
+                using (SmtpClient client = new SmtpClient("smtp.gmail.com", 587))
+                {
+                    client.EnableSsl = true;
+                    client.Credentials = new NetworkCredential(sendMailDTO.Email, sendMailDTO.Password);
+
+                    MailMessage message = new MailMessage(sendMailDTO.Email, StaticClass.MyEmail, sendMailDTO.Subject, sendMailDTO.Message);
+                    client.Send(message);
+                    ViewBag.Message = "Mail Send";
+                    return RedirectToAction("Index");
+                }
+            }
+            catch (Exception ex)
+            {
+                ViewBag.Message = ex.Message.ToString();
+                return View();
+            }
         }
-
-
+        public async Task<IActionResult> Shop()
+        {
+            var products = await _productRepository.GetAllAsync();
+            return View(products);
+        }
+        public async Task<IActionResult> ShopDesc()
+        {
+            var products = await _productRepository.OrderByPriceDesc();
+            return View("Shop", products);
+        }
+        public async Task<IActionResult> ShopAsc()
+        {
+            var products = await _productRepository.OrderByPriceAsc();
+            return View("Shop", products);
+        }
+        public async Task<IActionResult> ShopSearch(string query)
+        {
+            var products = await _productRepository.GetByQueryAsync(query);
+            return View("Shop", products);
+        }
         public async Task<IActionResult> CategoryPartial()
         {
             var categories = await _categoryRepository.GetAllAsync();

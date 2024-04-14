@@ -68,6 +68,7 @@ namespace ThoiTrangNam.Controllers
                 {
                     product.Images = await SaveImages(Images);
                 }
+                product.RemovedDiacriticsName = StaticClass.LocDau(product.ProductName);
                 await _productRepository.AddAsync(product);
                 return RedirectToAction(nameof(Index));
             }
@@ -138,6 +139,7 @@ namespace ThoiTrangNam.Controllers
                     // LUu hinh énh dai dién
                     product.ImageUrl = await SaveImage(imageUrl);
                 }
+                product.RemovedDiacriticsName = StaticClass.LocDau(product.ProductName);
                 await _productRepository.UpdateAsync(product);
                 return RedirectToAction(nameof(Index));
             }

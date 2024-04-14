@@ -1,4 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using System.Globalization;
+using System.Text;
 using ThoiTrangNam.Models;
 
 namespace ThoiTrangNam.Repository
@@ -52,6 +54,27 @@ namespace ThoiTrangNam.Repository
             return await _context.Products
             .Where(pi => pi.Category.ClassificationId == id)
             .ToListAsync();
+        }
+
+        public async Task<IEnumerable<Product>> OrderByPriceAsc()
+        {
+            return await _context.Products.Include(x => x.Category).OrderBy(x => x.SellPrice).ToListAsync();
+        }
+
+        public async Task<IEnumerable<Product>> OrderByPriceDesc()
+        {
+            return await _context.Products
+                        .Include(x => x.Category)
+                        .OrderByDescending(x => x.SellPrice)
+                        .ToListAsync();
+        }
+        public async Task<IEnumerable<Product>> GetByQueryAsync(string query)
+        {
+            string queryStr = StaticClass.LocDau(query);
+            return await _context.Products
+                        .Include(x => x.Category)
+                        .Where(x => x.RemovedDiacriticsName.Contains(queryStr))
+                        .ToListAsync();
         }
     }
 }

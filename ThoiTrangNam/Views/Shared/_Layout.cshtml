@@ -44,28 +44,6 @@
                     <div class="btn-group">
                         <partial name="_LoginPartial" />
                     </div>
-                    <div class="btn-group mx-2">
-                        <button type="button" class="btn btn-sm btn-light dropdown-toggle"
-                                data-toggle="dropdown">
-                            USD
-                        </button>
-                        <div class="dropdown-menu dropdown-menu-right">
-                            <button class="dropdown-item" type="button">EUR</button>
-                            <button class="dropdown-item" type="button">GBP</button>
-                            <button class="dropdown-item" type="button">CAD</button>
-                        </div>
-                    </div>
-                    <div class="btn-group">
-                        <button type="button" class="btn btn-sm btn-light dropdown-toggle"
-                                data-toggle="dropdown">
-                            EN
-                        </button>
-                        <div class="dropdown-menu dropdown-menu-right">
-                            <button class="dropdown-item" type="button">FR</button>
-                            <button class="dropdown-item" type="button">AR</button>
-                            <button class="dropdown-item" type="button">RU</button>
-                        </div>
-                    </div>
                 </div>
                 <div class="d-inline-flex align-items-center d-block d-lg-none">
                     <a href="" class="btn px-0 ml-2">
@@ -91,9 +69,9 @@
             <div class="col-lg-4 col-6 text-left">
                 <form action="">
                     <div class="input-group">
-                        <input type="text" class="form-control" placeholder="Search for products">
+                        <input type="text" class="form-control" placeholder="Search for products" id="query">
                         <div class="input-group-append">
-                            <span class="input-group-text bg-transparent text-primary">
+                            <span class="input-group-text bg-transparent text-primary" id="searchButton">
                                 <i class="fa fa-search"></i>
                             </span>
                         </div>
@@ -120,29 +98,29 @@
                      id="navbar-vertical" style="width: calc(100% - 30px); z-index: 999;">
                     <div class="navbar-nav w-100">
                         <div class="nav-item dropdown dropright">
-                            <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown">
+                            <a href="/Home/IndexByClassifi/1" class="nav-link dropdown-toggle" data-toggle="dropdown">
                                 Áo <i class="fa fa-angle-right float-right mt-1"></i>
                             </a>
                             <div class="dropdown-menu position-absolute rounded-0 border-0 m-0">
-                                <a href="" class="dropdown-item">Áo thun</a>
-                                <a href="" class="dropdown-item">Áo sơ mi</a>
-                                <a href="" class="dropdown-item">Áo khoác</a>
+                                <a href="/Home/IndexByCate/3" class="dropdown-item">Áo thun</a>
+                                <a href="/Home/IndexByCate/1" class="dropdown-item">Áo sơ mi</a>
+                                <a href="/Home/IndexByCate/4" class="dropdown-item">Áo khoác</a>
                                 <a href="" class="dropdown-item">Áo vest</a>
                             </div>
                         </div>
                         <div class="nav-item dropdown dropright">
-                            <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown">
+                            <a href="/Home/IndexByClassifi/2" class="nav-link dropdown-toggle" data-toggle="dropdown">
                                 Quần <i class="fa fa-angle-right float-right mt-1"></i>
                             </a>
                             <div class="dropdown-menu position-absolute rounded-0 border-0 m-0">
-                                <a href="" class="dropdown-item">Quần jeans</a>
-                                <a href="" class="dropdown-item">Quần tây</a>
-                                <a href="" class="dropdown-item">Quần kaki</a>
+                                <a href="/Home/IndexByCate/2" class="dropdown-item">Quần jeans</a>
+                                <a href="/Home/IndexByCate/5" class="dropdown-item">Quần tây</a>
+                                <a href="/Home/IndexByCate/6" class="dropdown-item">Quần kaki</a>
                                 <a href="" class="dropdown-item">Quần jogger</a>
                             </div>
                         </div>
                         <div class="nav-item dropdown dropright">
-                            <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown">
+                            <a href="/Home/IndexByClassifi/4" class="nav-link dropdown-toggle" data-toggle="dropdown">
                                 Phụ kiện <i class="fa fa-angle-right float-right mt-1"></i>
                             </a>
                             <div class="dropdown-menu position-absolute rounded-0 border-0 m-0">
@@ -168,8 +146,7 @@
                     <div class="collapse navbar-collapse justify-content-between" id="navbarCollapse">
                         <div class="navbar-nav mr-auto py-0">
                             <a asp-controller="Home" asp-action="Index" class="nav-item nav-link">Home</a>
-                            <a href="shop.html" class="nav-item nav-link">Shop</a>
-                            <a href="detail.html" class="nav-item nav-link active">Shop Detail</a>
+                            <a asp-controller="Home" asp-action="Shop" class="nav-item nav-link">Shop</a>
                             <div class="nav-item dropdown">
                                 <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown">
                                     Pages <i class="fa fa-angle-down mt-1"></i>
@@ -179,7 +156,7 @@
                                     <a href="/Cart/Checkout" class="dropdown-item">Checkout</a>
                                 </div>
                             </div>
-                            <a href="contact.html" class="nav-item nav-link">Contact</a>
+                            <a href="/Home/ContactUs" class="nav-item nav-link">Contact</a>
                             @if (User.IsInRole("Admin") || User.IsInRole("Employee"))
                             {
                                 <a href="/Order/Index" class="nav-item nav-link">List Order</a>
@@ -198,11 +175,6 @@
                             }
                         </div>
                         <div class="navbar-nav ml-auto py-0 d-none d-lg-block">
-                            <a href="" class="btn px-0">
-                                <i class="fas fa-heart text-primary"></i>
-                                <span class="badge text-secondary border border-secondary rounded-circle"
-                                      style="padding-bottom: 2px;">0</span>
-                            </a>
                             <a asp-controller="Cart" asp-action="Index" class="btn px-0 ml-3">
                                 <i class="fas fa-shopping-cart text-primary"></i>
                                 @await Component.InvokeAsync("CartWidget")
@@ -304,6 +276,19 @@
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            var searchButton = document.getElementById('searchButton');
+
+            searchButton.addEventListener('click', function () {
+                var queryInput = document.getElementById('query');
+
+                var query = queryInput.value;
+
+                window.location.href = "/Home/ShopSearch?query=" + query;
+            });
+        });
+    </script>
     @await RenderSectionAsync("Scripts", required: false)
 </body>
 </html>
