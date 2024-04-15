@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.VisualStudio.Web.CodeGenerators.Mvc.Templates.BlazorIdentity.Pages.Manage;
 using System.Diagnostics;
 using System.Net;
@@ -16,12 +17,15 @@ namespace ThoiTrangNam.Controllers
         private readonly ICategoryRepository _categoryRepository;
         private readonly IClassificationRepository _classificationRepository;
         private readonly IProductImageRepository _productImageRepository;
-        public HomeController(IProductRepository productRepository, ICategoryRepository categoryRepository, IClassificationRepository classificationRepository, IProductImageRepository productImageRepository)
+        private readonly ApplicationDbContext _context;
+        public string search = "";
+        public HomeController(IProductRepository productRepository, ICategoryRepository categoryRepository, IClassificationRepository classificationRepository, IProductImageRepository productImageRepository, ApplicationDbContext context)
         {
             _productRepository = productRepository;
             _categoryRepository = categoryRepository;
             _classificationRepository = classificationRepository;
             _productImageRepository = productImageRepository;
+            _context = context;
         }
         public async Task<IActionResult> Index()
         {
@@ -42,16 +46,6 @@ namespace ThoiTrangNam.Controllers
             }
             product.Images = await _productImageRepository.GetImagesByProductIdAsync(id);
             return View(product);
-        }
-        public async Task<IActionResult> IndexByCate(int id)
-        {
-            var products = await _productRepository.GetByCateIdAsync(id);
-            return View("Shop", products);
-        }
-        public async Task<IActionResult> IndexByClassifi(int id)
-        {
-            var products = await _productRepository.GetByClassifiIdAsync(id);
-            return View("Shop", products);
         }
         public async Task<IActionResult> ContactUs()
         {
@@ -81,25 +75,42 @@ namespace ThoiTrangNam.Controllers
                 return View();
             }
         }
-        public async Task<IActionResult> Shop()
+        public async Task<IActionResult> Shop(string query = "null", int orderBy = 0, int cate = 0, int classifi = 0, int currentPage = 1)
         {
-            var products = await _productRepository.GetAllAsync();
-            return View(products);
-        }
-        public async Task<IActionResult> ShopDesc()
-        {
-            var products = await _productRepository.OrderByPriceDesc();
-            return View("Shop", products);
-        }
-        public async Task<IActionResult> ShopAsc()
-        {
-            var products = await _productRepository.OrderByPriceAsc();
-            return View("Shop", products);
-        }
-        public async Task<IActionResult> ShopSearch(string query)
-        {
-            var products = await _productRepository.GetByQueryAsync(query);
-            return View("Shop", products);
+            var proView = new ProductViewModel();
+            if (!string.IsNullOrEmpty(query) && query!="null")
+            {
+                search = StaticClass.LocDau(query);
+            }
+            var products = await _context.Products.Include(p => p.Category).Where(p => p.RemovedDiacriticsName.Contains(search)).ToListAsync();
+            switch (orderBy)
+            {
+                case 1:
+                    products = products.OrderBy(p => p.SellPrice).ToList();
+                    break;
+                case 2:
+                    products = products.OrderByDescending(p => p.SellPrice).ToList();
+                    break;
+                default:
+                    break;
+            }
+            if(cate > 0)
+            {
+                products = products.Where(p => p.CategoryId == cate).ToList();
+            }
+            if (classifi > 0)
+            {
+                products = products.Where(p => p.Category.ClassificationId == classifi).ToList();
+            }
+            int totalRecords = products.Count();
+            int pageSize = 9;
+            int totalPages = (int)Math.Ceiling(totalRecords / (double)pageSize);
+            products = products.Skip((currentPage - 1) * pageSize).Take(pageSize).ToList();
+            proView.Products = products;
+            proView.CurrentPage = currentPage;
+            proView.PageSize = pageSize;
+            proView.TotalPages = totalPages;
+            return View(proView);
         }
         public async Task<IActionResult> CategoryPartial()
         {

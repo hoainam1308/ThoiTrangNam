@@ -1,4 +1,4 @@
-﻿@model IEnumerable<ThoiTrangNam.Models.Product>
+﻿@model ThoiTrangNam.Models.ProductViewModel
 @{
     ViewData["Title"] = "Shop";
 }
@@ -23,14 +23,14 @@
                                     Sorting Price
                                 </button>
                                 <div class="dropdown-menu dropdown-menu-right">
-                                    <a class="dropdown-item" asp-controller="Home" asp-action="ShopAsc">Low to high</a>
-                                    <a class="dropdown-item" asp-controller="Home" asp-action="ShopDesc">High to low</a>
+                                    <a class="dropdown-item" href="/Home/Shop?orderBy=1">Low to high</a>
+                                    <a class="dropdown-item" href="/Home/Shop?orderBy=2">High to low</a>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
-                @foreach(var item in Model)
+                @foreach(var item in Model.Products)
                 {
                     <div class="col-lg-4 col-md-6 col-sm-6 pb-1">
                         <div class="product-item bg-light mb-4">
@@ -75,11 +75,25 @@
                 <div class="col-12">
                     <nav>
                         <ul class="pagination justify-content-center">
-                            <li class="page-item disabled"><a class="page-link" href="#">Previous</span></a></li>
-                            <li class="page-item active"><a class="page-link" href="#">1</a></li>
-                            <li class="page-item"><a class="page-link" href="#">2</a></li>
-                            <li class="page-item"><a class="page-link" href="#">3</a></li>
-                            <li class="page-item"><a class="page-link" href="#">Next</a></li>
+                            @if(Model.CurrentPage > 1)
+                            {
+                                <li class="page-item"><a class="page-link" href="/Home/Shop?currentPage=@(Model.CurrentPage-1)">Previous</a></li>
+                            }
+                            @for(int i = 1; i<=Model.TotalPages; i++){
+                                if(i == Model.CurrentPage)
+                                {
+                                    <li class="page-item active"><a class="page-link" href="#">@i</a></li>
+                                }
+                                else
+                                {
+                                    <li class="page-item"><a class="page-link" href="/Home/Shop?currentPage=@i">@i</a></li>
+                                }
+                            }
+                            @if (Model.CurrentPage < Model.TotalPages)
+                            {
+                                <li class="page-item"><a class="page-link" href="/Home/Shop?currentPage=@(Model.CurrentPage+1)">Next</a></li>
+                            }
+                            
                         </ul>
                     </nav>
                 </div>
@@ -88,3 +102,43 @@
         <!-- Shop Product End -->
     </div>
 </div>
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        var paginationLinks = document.querySelectorAll('.pagination a.page-link');
+        var sortingLinks = document.querySelectorAll('.dropdown-menu a.dropdown-item');
+
+        paginationLinks.forEach(function (link) {
+            link.addEventListener('click', function (event) {
+                event.preventDefault();
+                var currentUrl = window.location.href;
+                var page = event.target.getAttribute('href').split('=')[1]; // Lấy số trang từ href của liên kết được chọn
+
+                // Kiểm tra xem có các tham số truy vấn hiện có không
+                var params = new URLSearchParams(window.location.search);
+                // Thêm tham số truy vấn mới vào
+                params.set('currentPage', page);
+                // Tạo URL mới với tất cả các tham số
+                var newUrl = currentUrl.split('?')[0] + '?' + params.toString();
+
+                window.location.href = newUrl;
+            });
+        });
+
+        sortingLinks.forEach(function (link) {
+            link.addEventListener('click', function (event) {
+                event.preventDefault();
+                var currentUrl = window.location.href;
+                var order = event.target.getAttribute('href').split('=')[1]; // Lấy thứ tự sắp xếp từ href của liên kết được chọn
+
+                // Kiểm tra xem có các tham số truy vấn hiện có không
+                var params = new URLSearchParams(window.location.search);
+                // Thêm tham số truy vấn mới vào
+                params.set('orderBy', order);
+                // Tạo URL mới với tất cả các tham số
+                var newUrl = currentUrl.split('?')[0] + '?' + params.toString();
+
+                window.location.href = newUrl;
+            });
+        });
+    });
+</script>

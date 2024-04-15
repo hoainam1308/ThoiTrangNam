@@ -68,7 +68,6 @@ namespace ThoiTrangNam.Repository
                         .OrderByDescending(x => x.SellPrice)
                         .ToListAsync();
         }
-
         public async Task<IEnumerable<Product>> GetByQueryAsync(string query)
         {
             string queryStr = StaticClass.LocDau(query);
