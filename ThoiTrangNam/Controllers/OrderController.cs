@@ -5,7 +5,7 @@ using ThoiTrangNam.Repository;
 
 namespace ThoiTrangNam.Controllers
 {
-    [Authorize(Roles = SD.Role_Admin)]
+    [Authorize(Roles = SD.Role_Admin + "," + SD.Role_Employee)]
     public class OrderController : Controller
     {
         private readonly IOrderRepository _orderRepository;
