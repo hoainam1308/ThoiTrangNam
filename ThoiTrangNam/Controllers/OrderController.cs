@@ -1,9 +1,12 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using ThoiTrangNam.Models;
 using ThoiTrangNam.Repository;
 
 namespace ThoiTrangNam.Controllers
 {
+    [Authorize(Roles = SD.Role_Admin)]
+    [Authorize(Roles = SD.Role_Employee)]
     public class OrderController : Controller
     {
         private readonly IOrderRepository _orderRepository;
@@ -43,7 +46,7 @@ namespace ThoiTrangNam.Controllers
             var order = await _orderRepository.GetByIdAsync(id);
             if (order == null)
             {
-                return NotFound();              
+                return NotFound();
             }
             bool shopConfirm = false;
             await _orderRepository.UpdateAsync(id, shopConfirm);

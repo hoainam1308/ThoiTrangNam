@@ -1,6 +1,8 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using System.Net.Mail;
+using System.Net;
 using System.Runtime.CompilerServices;
 using ThoiTrangNam.Extensions;
 using ThoiTrangNam.Models;
@@ -13,13 +15,15 @@ namespace ThoiTrangNam.Controllers
     {
         public Cart? Cart { get; set; }
         private readonly IProductRepository _productRepository;
+        private readonly IOrderRepository _orderRepository;
         private readonly ApplicationDbContext _context;
         private readonly UserManager<ApplicationUser> _userManager;
-        public CartController(ApplicationDbContext context, UserManager<ApplicationUser> userManager, IProductRepository productRepository)
+        public CartController(ApplicationDbContext context, UserManager<ApplicationUser> userManager, IProductRepository productRepository, IOrderRepository orderRepository)
         {
             _productRepository = productRepository;
             _context = context;
             _userManager = userManager;
+            _orderRepository = orderRepository;
         }
         public async Task<IActionResult> AddToCart(int productId)
         {
@@ -123,6 +127,16 @@ namespace ThoiTrangNam.Controllers
                 _context.OrderDetails.Add(orderDetail);
             }
             await _context.SaveChangesAsync();
+            using (SmtpClient client = new SmtpClient("smtp.gmail.com", 587))
+            {
+                client.EnableSsl = true;
+                client.Credentials = new NetworkCredential(StaticClass.FromEmail, StaticClass.Password);
+                string subject = "Đơn hàng mới";
+                string infor = "Tên khách hàng: " + order.CustomerName + "\nĐịa chỉ: " + order.ShippingAddress + "\nSĐT: " + order.PhoneNumber + "\nSố tiền: "+ order.TotalPrice.ToString("#,##0") + " VNĐ";
+                MailMessage message = new MailMessage(StaticClass.FromEmail, StaticClass.MyEmail, subject, infor);
+                client.Send(message);
+                ViewBag.Message = "Mail Send";
+            }
             // Xóa giỏ hàng sau khi đã thanh toán
             HttpContext.Session.Remove("cart");
             // Chuyển hướng đến trang xác nhận đơn hàng
@@ -132,6 +146,11 @@ namespace ThoiTrangNam.Controllers
         {
             return View(orderId);
         }
-
+        public async Task<IActionResult> OrderNotification()
+        {
+            string userId = await UserManager.GetUserIdAsync(User);
+            var orders = _orderRepository.GetByCustomerIdAsync(UserManager.GetUserAsync(User))
+            return View();
+        }
     }
 }
