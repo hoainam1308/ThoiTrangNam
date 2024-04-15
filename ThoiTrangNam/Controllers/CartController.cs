@@ -146,11 +146,5 @@ namespace ThoiTrangNam.Controllers
         {
             return View(orderId);
         }
-        public async Task<IActionResult> OrderNotification()
-        {
-            string userId = await UserManager.GetUserIdAsync(User);
-            var orders = _orderRepository.GetByCustomerIdAsync(UserManager.GetUserAsync(User))
-            return View();
-        }
     }
 }

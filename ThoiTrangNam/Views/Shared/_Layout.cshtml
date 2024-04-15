@@ -179,10 +179,7 @@
                                 </div>
                             }
                         </div>
-                        <div class="navbar-nav ml-auto py-0 d-none d-lg-block">
-                            <a href="" class="btn px-0">
-                                <i class="fas fa-bell text-primary"></i>
-                            </a>
+                        <div class="navbar-nav ml-auto py-0 d-none d-lg-block">                           
                             <a asp-controller="Cart" asp-action="Index" class="btn px-0 ml-3">
                                 <i class="fas fa-shopping-cart text-primary"></i>
                                 @await Component.InvokeAsync("CartWidget")
@@ -266,14 +263,23 @@
         document.addEventListener('DOMContentLoaded', function () {
             var searchButton = document.getElementById('searchButton');
 
-            searchButton.addEventListener('click', function () {
+            searchButton.addEventListener('click', function (event) {
+                event.preventDefault(); // Chặn hành vi mặc định của form
+
                 var queryInput = document.getElementById('query');
                 var currentUrl = window.location.href;
                 var query = queryInput.value;
                 var params = new URLSearchParams(window.location.search);
-                
+
                 params.set('query', query);
                 var newUrl = currentUrl.split('?')[0] + '?' + params.toString();
+
+                // Kiểm tra xem đường dẫn của URL có phải là http://localhost:5195/Home/Shop không
+                if (!currentUrl.includes('/Home/Shop')) {
+                    // Nếu không, sửa lại đường dẫn cho giống để tránh gọi ra http://localhost:5195/?query=
+                    newUrl = 'http://localhost:5195/Home/Shop?' + params.toString();
+                }
+
                 window.location.href = newUrl;
             });
         });

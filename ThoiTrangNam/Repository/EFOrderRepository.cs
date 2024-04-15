@@ -22,6 +22,10 @@ namespace ThoiTrangNam.Repository
         {
             return await _context.Orders.Include(x => x.OrderDetails).SingleOrDefaultAsync(x => x.Id == id);
         }
+        public async Task<Order> GetByCustomerIdAsync(string id)
+        {
+            return await _context.Orders.Include(x => x.OrderDetails).SingleOrDefaultAsync(x => x.UserId == id);
+        }
         public async Task UpdateAsync(int id, bool status)
         {
             var order =  await _context.Orders.Include(x => x.OrderDetails).SingleOrDefaultAsync(x => x.Id == id);
