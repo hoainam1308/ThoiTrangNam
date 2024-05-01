@@ -2,7 +2,7 @@
 @{
     ViewData["Title"] = "Details";
 }
-<div>
+<div style="padding-left:540px;">
     <h4>Chi tiết sản phẩm</h4>
     <hr />
     <dl class="row">
@@ -16,13 +16,17 @@
             @Html.DisplayNameFor(model => model.BuyPrice)
         </dt>
         <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.BuyPrice)
+            <p>
+                @Model.BuyPrice.ToString("#,##0") VNĐ
+            </p>
         </dd>
         <dt class="col-sm~2">
             @Html.DisplayNameFor(model => model.SellPrice)
         </dt>
         <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.SellPrice)
+            <p>
+                @Model.SellPrice.ToString("#,##0") VNĐ
+            </p>
         </dd>
         <dt class="col-sm~2">
             @Html.DisplayNameFor(model => model.Quantity)
@@ -37,38 +41,38 @@
             @Html.DisplayFor(model => model.Description)
         </dd>
         <dt class="col-sm~2">
-            @Html.DisplayNameFor(model => model.ImageUrl)
-        </dt>
-        <dd class="col-sm-10">
-            <img src="@Html.DisplayFor(model => model.ImageUrl)" width="280px" />
-        </dd>
-        <dt class="col-sm-2">
-            Other Images
-        </dt>
-        <dd class="col-sm-10">
-            @if (Model.Images.Count > 0)
-            {
-                foreach (var image in Model.Images)
-                {
-                    <img src="@image.Url" width="200px" />
-                }
-            }
-            else
-            {
-                <p>No other images available.</p>
-            }
-        </dd>
-        <dt class="col-sm~2">
             @Html.DisplayNameFor(model => model.Category)
         </dt>
         <dd class="col-sm-10">
             @Html.DisplayFor(model => model.Category.CategoryName)
         </dd>
+        <dt class="col-sm~2">
+            @Html.DisplayNameFor(model => model.ImageUrl)
+        </dt>
+        <dd class="col-sm-4">
+            <img src="@Html.DisplayFor(model => model.ImageUrl)" width="280px" />
+            <div class="row">
+                <dd class="col-sm-4">
+                    @if (Model.Images.Count > 0)
+                    {
+                        foreach (var image in Model.Images)
+                        {
+                            <img src="@image.Url" class="img-fluid mr-2 mb-2" style="width: 200px;" />
+                        }
+                    }
+                    else
+                    {
+                        <p>No other images available.</p>
+                    }
+                </dd>
+            </div>
+        </dd>      
     </dl>
-
+    
+    <div>
+        <a asp-action="Edit" asp-route-id="@Model?.ProductId">Sửa</a> |
+        <a asp-action="Delete" asp-route-id="@Model?.ProductId">Xóa</a> |
+        <a asp-action="Index">Trở lại</a>
+    </div>
 </div>
 
-<div>
-    <a asp-action="Edit" asp-route-id="@Model?.ProductId">Sửa</a> |
-    <a asp-action="Index">Trở lại</a>
-</div>

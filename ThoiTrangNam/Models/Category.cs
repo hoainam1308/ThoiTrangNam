@@ -19,6 +19,6 @@ namespace ThoiTrangNam.Models
 
         [DisplayName("Phân loại")]
         public Classification? Classification { get; set; }
-        public List<Product> Products { get; set; }
+        public List<Product>? Products { get; set; }
     }
 }

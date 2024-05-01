@@ -1,0 +1,38 @@
+﻿@model IEnumerable<ThoiTrangNam.Models.Category>
+
+@{
+    ViewData["Title"] = "Index";
+}
+<h1>Category</h1>
+<h3>
+    <a asp-action="Create">Create New</a>
+</h3>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.CategoryName)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Classification)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @if (Model != null)
+        {
+            foreach (var item in Model)
+            {
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.CategoryName)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Classification.ClassificationName)
+                    </td>
+                </tr>
+            }
+        }
+    </tbody>
+</table>
