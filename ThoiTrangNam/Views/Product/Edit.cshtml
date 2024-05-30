@@ -1,8 +1,10 @@
 ﻿@model ThoiTrangNam.Models.Product
 @{
     ViewData["Title"] = "Edit";
+    Layout = "~/Views/Shared/_LayoutAdmin.cshtml";
+
 }
-<div style="padding-left:540px;">
+<div style="padding-left:300px;">
     <h4>Sửa sản phẩm</h4>
     <hr />
     <div class="row">
@@ -57,8 +59,3 @@
         <a asp-action="Index">Trở về</a>
     </div>
 </div>
-@section Scripts {
-    @{
-        await Html.RenderPartialAsync("_ValidationScriptsPartial");
-    }
-}

@@ -7,6 +7,17 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Content Remove="Views\Admin\404.cshtml" />
+    <Content Remove="Views\Admin\blank.cshtml" />
+    <Content Remove="Views\Admin\buttons.cshtml" />
+    <Content Remove="Views\Admin\cards.cshtml" />
+    <Content Remove="Views\Admin\charts.cshtml" />
+    <Content Remove="Views\Admin\forgot-password.cshtml" />
+    <Content Remove="Views\Admin\login.cshtml" />
+    <Content Remove="Views\Admin\register.cshtml" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.Authentication.Facebook" Version="8.0.5" />
     <PackageReference Include="Microsoft.AspNetCore.Authentication.Google" Version="8.0.5" />
     <PackageReference Include="Microsoft.AspNetCore.Identity" Version="2.1.39" />
@@ -28,6 +39,18 @@
   <ItemGroup>
     <Folder Include="Areas\Admin\Controllers\" />
     <Folder Include="Areas\Admin\Views\" />
+    <Folder Include="wwwroot\admin\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="Views\Admin\404.cshtml" />
+    <None Include="Views\Admin\blank.cshtml" />
+    <None Include="Views\Admin\buttons.cshtml" />
+    <None Include="Views\Admin\cards.cshtml" />
+    <None Include="Views\Admin\charts.cshtml" />
+    <None Include="Views\Admin\forgot-password.cshtml" />
+    <None Include="Views\Admin\login.cshtml" />
+    <None Include="Views\Admin\register.cshtml" />
   </ItemGroup>
 
 </Project>

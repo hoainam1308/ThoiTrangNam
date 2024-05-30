@@ -1,8 +1,9 @@
 ﻿@model ThoiTrangNam.Models.Product
 @{
     ViewData["Title"] = "Create";
+    Layout = "~/Views/Shared/_LayoutAdmin.cshtml";
 }
-<div style="padding-left:540px;">
+
     <h4>Thêm sản phẩm mới</h4>
     <hr />
     <form asp-action="Create" enctype="multipart/form-data" style="width:1200px;">
@@ -49,8 +50,3 @@
         <a asp-action="Index">Trở về</a>
     </div>
 </div>
-@section Scripts {
-    @{
-        await Html.RenderPartialAsync("_ValidationScriptsPartial");
-    }
-}

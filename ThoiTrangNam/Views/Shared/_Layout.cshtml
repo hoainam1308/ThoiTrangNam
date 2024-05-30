@@ -14,7 +14,6 @@
     <link rel="preconnect" href="https://fonts.gstatic.com">
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
     <!-- Font Awesome -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" integrity="sha384-jLKHWMbvJbi2Fwzzvw5pIgjlrzI4zF6jP1y4JvczrVogP9CQWNs3yZFYow7h34C0" crossorigin="anonymous">
 
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.10.0/css/all.min.css" rel="stylesheet">
 
@@ -32,35 +31,7 @@
 <body>
     <!-- Topbar Start -->
     <div class="container-fluid">
-        <div class="row bg-secondary py-1 px-xl-5">
-            <div class="col-lg-6 d-none d-lg-block">
-                <div class="d-inline-flex align-items-center h-100">
-                    <a class="text-body mr-3" href="">About</a>
-                    <a class="text-body mr-3" href="">Contact</a>
-                    <a class="text-body mr-3" href="">Help</a>
-                    <a class="text-body mr-3" href="">FAQs</a>
-                </div>
-            </div>
-            <div class="col-lg-6 text-center text-lg-right">
-                <div class="d-inline-flex align-items-center">
-                    <div class="btn-group">
-                        <partial name="_LoginPartial" />
-                    </div>
-                </div>
-                <div class="d-inline-flex align-items-center d-block d-lg-none">
-                    <a href="" class="btn px-0 ml-2">
-                        <i class="fas fa-heart text-dark"></i>
-                        <span class="badge text-dark border border-dark rounded-circle"
-                              style="padding-bottom: 2px;">0</span>
-                    </a>
-                    <a href="" class="btn px-0 ml-2">
-                        <i class="fas fa-shopping-cart text-dark"></i>
-                        <span class="badge text-dark border border-dark rounded-circle"
-                              style="padding-bottom: 2px;">0</span>
-                    </a>
-                </div>
-            </div>
-        </div>
+       
         <div class="row align-items-center bg-light py-3 px-xl-5 d-none d-lg-flex">
             <div class="col-lg-4">
                 <a href="" class="text-decoration-none">
@@ -156,30 +127,10 @@
                                 </div>
                             </div>
                             <a href="/Home/ContactUs" class="nav-item nav-link">Contact</a>
-                            @if (User.IsInRole("Admin") || User.IsInRole("Employee"))
-                            {
-                                <div class="nav-item dropdown">
-                                    <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown">
-                                        List Order <i class="fa fa-angle-down mt-1"></i>
-                                    </a>
-                                    <div class="dropdown-menu bg-primary rounded-0 border-0 m-0">
-                                        <a href="/Order/Index" class="dropdown-item">All Order</a>
-                                        <a href="/Order/IndexNew" class="dropdown-item">New Order</a>
-                                    </div>
-                                </div>
-                            }
-                            @if (User.IsInRole("Admin"))
-                            {
-                                <div class="nav-item dropdown">
-                                    <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown">
-                                        Manager <i class="fa fa-angle-down mt-1"></i>
-                                    </a>
-                                    <div class="dropdown-menu bg-primary rounded-0 border-0 m-0">
-                                        <a href="/Product/Index" class="dropdown-item">Product</a>
-                                        <a href="/Category/Index" class="dropdown-item">Category</a>
-                                    </div>
-                                </div>
-                            }
+                           
+                        </div>
+                        <div>
+                            @await Html.PartialAsync("_LoginPartial")
                         </div>
                         <div class="navbar-nav ml-auto py-0 d-none d-lg-block">                           
                             <a asp-controller="Cart" asp-action="Index" class="btn px-0 ml-3">

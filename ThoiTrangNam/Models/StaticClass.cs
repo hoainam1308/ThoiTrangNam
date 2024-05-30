@@ -4,7 +4,7 @@
     {
         public const string MyEmail = "hoainam1511ytn@gmail.com";
         public const string FromEmail = "hoainamstudy@gmail.com";
-        public const string Password = "moyd qbiu ceir rdel";
+        public const string Password = "wczb tggd vcbr twyl";
         public const string MyAddress = "123, Quận 9, Hồ Chí Minh";
         public const string MyPhone= "+012 345 67890";
         private static readonly string[] VietNamChar =
