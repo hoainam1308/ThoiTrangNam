@@ -1,0 +1,75 @@
+﻿@model Order
+@using Microsoft.AspNetCore.Identity
+
+@inject UserManager<ApplicationUser> UserManager
+
+@{
+    var user = await UserManager.GetUserAsync(User);
+    string userName = user?.FullName ?? "Guest";
+    string phone = user?.PhoneNumber ?? "0123456789";
+    string address = user?.Address ?? "123 Street";
+}
+<div class="container-fluid">
+    <div class="row px-xl-5">
+        <div class="col-12">
+            <nav class="breadcrumb bg-light mb-30">
+                <a class="breadcrumb-item text-dark" href="#">Home</a>
+                <a class="breadcrumb-item text-dark" href="#">Shop</a>
+                <span class="breadcrumb-item active">Checkout</span>
+            </nav>
+        </div>
+    </div>
+</div>
+<form asp-action="Checkout" method="post">
+    <div class="container-fluid">
+        <div class="row px-xl-5">
+            <div class="col-lg-8">
+                <h5 class="section-title position-relative text-uppercase mb-3"><span class="bg-secondary pr-3">Billing Address</span></h5>
+                <div class="bg-light p-30 mb-5">
+                    <div class="row">
+                        <div class="col-md-6 form-group">
+                            <label asp-for="CustomerName">Full Name</label>
+                            <input asp-for="CustomerName" class="form-control" type="text" placeholder="Name" value="@(string.IsNullOrEmpty(Model.CustomerName) ? userName : Model.CustomerName)" required="true">
+                        </div>
+                        <div class="col-md-6 form-group">
+                            <label asp-for="PhoneNumber">Mobile No</label>
+                            @if(user.PhoneNumber == null)
+                            {
+                                <input asp-for="PhoneNumber" class="form-control" type="text" placeholder="Phone" required="true">
+                            }
+                            else
+                            {
+                                <input asp-for="PhoneNumber" class="form-control" type="text" placeholder="Phone" value="@user.PhoneNumber" required="true">
+
+                            }
+                        </div>
+                        <div class="col-md-6 form-group">
+                            <label asp-for="ShippingAddress">Address</label>
+                            @if (user.Address == null)
+                            {
+                                <input asp-for="ShippingAddress" class="form-control" type="text" placeholder="Address" required="true">
+                            }
+                            else
+                            {
+                                <input asp-for="ShippingAddress" class="form-control" type="text" placeholder="Address" value="@user.Address" required="true">
+
+                            }
+                        </div>
+                        <div class="col-md-6 form-group">
+                            <label asp-for="Notes">Notes</label>
+                            <textarea asp-for="Notes" class="form-control" placeholder="Delivery in the afternoon"></textarea>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-4">               
+                <div class="mb-5">
+                    <h5 class="section-title position-relative text-uppercase mb-3"><span class="bg-secondary pr-3">Payment</span></h5>
+                    <div class="bg-light p-30">
+                        <button type="submit" class="btn btn-block btn-primary font-weight-bold py-3">Place Order</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>

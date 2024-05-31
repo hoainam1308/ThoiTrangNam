@@ -1,0 +1,32 @@
+﻿@model ThoiTrangNam.Models.Order
+
+<h2>Order Details</h2>
+
+@foreach (var item in Model.OrderDetails)
+{
+    <tr>
+        <td style="padding-left:80px; text-align:left; width:800px;">
+            <img src=@item.Product.ImageUrl alt="" style="width: 50px;">
+            @if (!string.IsNullOrEmpty(item.Product.ProductName) && item.Product.ProductName.Length > 100)
+            {
+                string parameterValue = item.Product.ProductName.ToString().Substring(0, 100);
+
+                @Html.DisplayFor(modelItem => parameterValue)
+
+                @:...
+            }
+            else
+            {
+                @Html.DisplayFor(modelItem => item.Product.ProductName)
+            }
+        </td>
+        <td class="align-middle">@item.Price.ToString("#,##0") VNĐ</td>
+        <td class="align-middle">
+            @item.Quantity
+        </td>
+        @if (item.Order.isConfirm == true && !item.Rating.HasValue)
+        {
+            <a asp-action="Review" asp-route-orderDetailId="@item.Id">Leave a Review</a>
+        }
+    </tr>
+}

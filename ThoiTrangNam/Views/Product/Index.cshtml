@@ -1,0 +1,74 @@
+﻿@model IEnumerable<ThoiTrangNam.Models.Product>
+@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Views/Shared/_LayoutAdmin.cshtml";
+}
+
+<h1>
+    Product
+</h1>
+<h2>
+    <a asp-action="Create">Tạo mới</a>
+</h2>
+<table class="table">
+    <thead>
+        <tp>
+            <th>
+                @Html.DisplayNameFor(model => model.ProductName)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.SellPrice)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Description)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.ImageUrl)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Category)
+            </th>
+            <th></th>
+        </tp>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modeIItem => item.ProductName)
+                </td>
+                <td>
+                    <p>
+                        @item.SellPrice.ToString("#,##0") VNĐ
+                    </p>
+                </td>
+                <td>
+                    @if (!string.IsNullOrEmpty(item.Description) && item.Description.Length > 100)
+                    {
+                        string parameterValue = item.Description.ToString().Substring(0, 100);
+
+                        @Html.DisplayFor(modelItem => parameterValue)
+
+                        @:...
+                    }
+                    else
+                    {
+                        @Html.DisplayFor(modelItem => item.Description)
+                    }
+                </td>
+                <td>
+                    <img src="@Html.DisplayFor(modelItem => item.ImageUrl)" width="100px" />
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Category.CategoryName)
+                </td>
+                <td>
+                    <a asp-action="Edit" asp-route-id="@item.ProductId">Sửa</a> |
+                    <a asp-action="ProductDetails" asp-route-id="@item.ProductId">Chi tiết</a> |
+                    <a asp-action="Delete" asp-route-id="@item.ProductId">Xóa</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

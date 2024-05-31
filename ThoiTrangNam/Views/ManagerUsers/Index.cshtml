@@ -1,0 +1,72 @@
+﻿@model IEnumerable<ThoiTrangNam.Models.ApplicationUser>
+
+@{
+    ViewData["Title"] = "User Management";
+    Layout = "~/Views/Shared/_LayoutAdmin.cshtml";
+}
+
+<h1>User Management</h1>
+
+
+
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.First().FullName)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.First().Email)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.First().Address)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.First().Age)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.First().LockoutEnd)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var user in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => user.FullName)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => user.Email)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => user.Address)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => user.Age)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => user.LockoutEnd)
+                </td>
+                <td>
+                    <a asp-action="Edit" asp-route-id="@user.Id" class="btn btn-warning">Edit</a>
+                    <a asp-action="ChangePassword" asp-route-id="@user.Id" class="btn btn-info">Change Password</a>
+                  
+                    @if (user.LockoutEnd.HasValue && user.LockoutEnd > DateTime.UtcNow)
+                    {
+                        <a asp-action="Unlock" asp-route-id="@user.Id" class="btn btn-success">Unlock</a>
+                    }
+                    else
+                    {
+                        <a asp-action="Lock" asp-route-id="@user.Id" class="btn btn-danger">Lock</a>
+                    }
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+<div>
+    <a asp-action="Index" class="btn btn-secondary">Back to Home</a>
+</div>

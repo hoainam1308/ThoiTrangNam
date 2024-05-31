@@ -1,0 +1,120 @@
+﻿@model ThoiTrangNam.Models.ReviewViewModel
+<head>
+    <!-- Other head elements -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
+    <style>
+        /*reset css*/
+        div, label {
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            margin: 20px;
+        }
+
+        h1 {
+            font-size: 1.5em;
+            margin: 10px;
+        }
+
+        /****** Style Star Rating Widget *****/
+        #rating {
+            border: none;
+            float: left;
+        }
+
+        #rating > input {
+            display: none;
+        }
+        /* Hide radio inputs */
+        #rating > label:before {
+            margin: 5px;
+            font-size: 1.25em;
+            font-family: FontAwesome;
+            display: inline-block;
+            content: "\f005"; /* Full star */
+        }
+
+        #rating > .half:before {
+            content: "\f089";
+            position: absolute; /* Half star */
+        }
+
+        #rating > label {
+            color: #ddd;
+            float: right;
+        }
+        /* Float right to reverse order */
+
+        /* Highlight stars on hover and when selected */
+        #rating > input:checked ~ label,
+        #rating:not(:checked) > label:hover,
+        #rating:not(:checked) > label:hover ~ label {
+            color: #FFD700;
+        }
+
+        /* Highlight all stars up to and including the hovered star */
+        #rating > input:checked + label:hover,
+        #rating > input:checked ~ label:hover,
+        #rating > label:hover ~ input:checked ~ label,
+        #rating > input:checked ~ label:hover ~ label {
+            color: #FFED85;
+        }
+    </style>
+</head>
+<body>
+    <h2>Leave a Review</h2>
+
+    <form asp-action="Review">
+        <input type="hidden" asp-for="OrderDetailId" />
+        <input type="hidden" asp-for="Rating" id="Rating" />
+
+        <div id="rating">
+            <input type="radio" id="star5" name="rating" value="5" />
+            <label class="full" for="star5" title="Awesome - 5 stars"></label>
+
+            <input type="radio" id="star4" name="rating" value="4" />
+            <label class="full" for="star4" title="Pretty good - 4 stars"></label>
+
+            <input type="radio" id="star3" name="rating" value="3" />
+            <label class="full" for="star3" title="Meh - 3 stars"></label>
+
+            <input type="radio" id="star2" name="rating" value="2" />
+            <label class="full" for="star2" title="Kinda bad - 2 stars"></label>
+
+            <input type="radio" id="star1" name="rating" value="1" />
+            <label class="full" for="star1" title="Sucks big time - 1 star"></label>
+        </div>
+
+        <div>
+            <label asp-for="UserReview">Review</label>
+            <textarea asp-for="UserReview"></textarea>
+        </div>
+
+        <button type="submit">Submit Review</button>
+    </form>
+</body>
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const ratingInput = document.getElementById('Rating');
+        const starRadios = document.querySelectorAll('#rating input[type="radio"]');
+
+        starRadios.forEach(radio => {
+            radio.addEventListener('change', function () {
+                ratingInput.value = this.value;
+            });
+        });
+
+        function calcRate(r) {
+            const f = Math.floor(r),
+                id = 'star' + f + (r % f ? 'half' : '');
+            id && (document.getElementById(id).checked = true);
+        }
+
+        // Initialize the stars if there is a rating value already set
+        if (ratingInput.value) {
+            calcRate(ratingInput.value);
+        }
+    });
+</script>

@@ -1,0 +1,82 @@
+﻿@model ThoiTrangNam.Models.SendMailDTO
+@inject UserManager<ApplicationUser> UserManager
+@using Microsoft.AspNetCore.Identity
+
+@{
+    var user = await UserManager.GetUserAsync(User);
+    string userName = user?.FullName ?? "Guest";
+    string email = user?.Email ?? "Guest";
+    var defaultName = string.IsNullOrEmpty(Model?.Name) ? userName : Model.Name;
+    var defaultEmail = string.IsNullOrEmpty(Model?.Email) ? email : Model.Email;
+}
+<!-- Breadcrumb Start -->
+<div class="container-fluid">
+    <div class="row px-xl-5">
+        <div class="col-12">
+            <nav class="breadcrumb bg-light mb-30">
+                <a class="breadcrumb-item text-dark" href="#">Home</a>
+                <span class="breadcrumb-item active">Contact</span>
+            </nav>
+        </div>
+    </div>
+</div>
+<!-- Breadcrumb End -->
+<!-- Contact Start -->
+<div class="container-fluid">
+    <h2 class="section-title position-relative text-uppercase mx-xl-5 mb-4"><span class="bg-secondary pr-3">Contact Us</span></h2>
+    <div class="row px-xl-5">
+        <div class="col-lg-7 mb-5">
+            <div class="contact-form bg-light p-30">
+                <div id="success"></div>
+                <form method="post" asp-action="ContactUs">
+                    <div class="control-group">
+                        <input asp-for="Name" type="text" class="form-control" id="name" placeholder="Your Name" value="@defaultName"
+                               required="required" data-validation-required-message="Please enter your name" />
+                        <p class="help-block text-danger"></p>
+                    </div>
+                    <div class="control-group">
+                        <input asp-for="Email" type="email" class="form-control" id="email" placeholder="ex@gmail.com" value="@defaultEmail"
+                               required="required" data-validation-required-message="Please enter a subject" />
+                        <p class="help-block text-danger"></p>
+                    </div>
+                    <div class="control-group">
+                        <input asp-for="Password" type="password" class="form-control" id="password" placeholder="password"
+                               required="required" data-validation-required-message="Please enter a subject" />
+                        <p class="help-block text-danger"></p>
+                    </div>
+                    <div class="control-group">
+                        <input asp-for="Subject" type="text" class="form-control" id="subject" placeholder="Subject"
+                               required="required" data-validation-required-message="Please enter a subject" />
+                        <p class="help-block text-danger"></p>
+                    </div>
+                    <div class="control-group">
+                        <textarea asp-for="Message" class="form-control" rows="8" id="message" placeholder="Message"
+                                  required="required"
+                                  data-validation-required-message="Please enter your message"></textarea>
+                        <p class="help-block text-danger"></p>
+                    </div>
+                    <div>
+                        <button class="btn btn-primary py-2 px-4" type="submit">
+                            Send
+                            Message
+                        </button>
+                    </div>
+                    @if (ViewBag.Message != null)
+                    {
+                        <div class="alert alert-success" role="alert">
+                            @ViewBag.Message
+                        </div>
+                    }
+                </form>
+            </div>
+        </div>
+        <div class="col-lg-5 mb-5">
+            <div class="bg-light p-30 mb-3">
+                <p class="mb-2"><i class="fa fa-map-marker-alt text-primary mr-3"></i>@StaticClass.MyAddress</p>
+                <p class="mb-2"><i class="fa fa-envelope text-primary mr-3"></i>@StaticClass.MyEmail</p>
+                <p class="mb-2"><i class="fa fa-phone-alt text-primary mr-3"></i>@StaticClass.MyPhone</p>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Contact End -->

@@ -1,0 +1,81 @@
+﻿﻿@using Microsoft.AspNetCore.Identity
+
+@inject SignInManager<ApplicationUser> SignInManager
+@inject UserManager<ApplicationUser> UserManager
+@{
+    var user = await UserManager.GetUserAsync(User);
+}
+<div class="navbar-nav ml-auto py-0 d-none d-lg-block">
+<ul class="navbar-nav">
+    @if (SignInManager.IsSignedIn(User))
+    {
+        <li class="nav-item dropdown no-arrow">
+            <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button"
+               data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    <span class="mr-2 d-none d-lg-inline text-gray-600 small"> @user?.FullName</span>
+                <img class="img-profile rounded-circle"
+                     src="~/images/icon-user.png" width="30">
+            </a>
+            <!-- Dropdown - User Information -->
+            <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in"
+                 aria-labelledby="userDropdown">
+                <a class="dropdown-item" asp-area="Identity" asp-page="/Account/Manage/Index">
+                    <i class="fas fa-user fa-sm fa-fw mr-2 text-gray-400"></i>
+                    Thông tin
+                </a>
+
+                <div class="dropdown-divider"></div>
+                <a class="dropdown-item" data-toggle="modal" data-target="#logoutModal" role="button">
+                    <i class="fas fa-sign-out-alt fa-sm fa-fw mr-2 text-gray-400"></i>
+                    Logout
+                </a>
+            </div>
+        </li>
+    }
+    else
+    {
+         <li class="nav-item dropdown no-arrow">
+            <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button"
+               data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Guest
+               <img class="img-profile rounded-circle"
+                     src="~/images/icon-user.png" width="30">
+            </a>
+
+            <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in"
+                 aria-labelledby="userDropdown">
+            
+            <a class="dropdown-item" asp-area="Identity" asp-page="/Account/Register">
+                <i class="fas fa-user fa-sm fa-fw mr-2 text-gray-400"></i>
+                Đăng kí
+            </a>
+
+                    <div class="dropdown-divider"></div>
+            <a class="dropdown-item" asp-area="Identity" asp-page="/Account/Login">
+                <i class="fas fa-user fa-sm fa-fw mr-2 text-gray-400"></i>
+                Đăng nhập
+            </a>
+            </div>
+         </li>
+    }
+</ul>
+</div>
+<div class="modal fade" id="logoutModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+     aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Đăng xuất?</h5>
+                <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                </button>
+            </div>
+            <div class="modal-body">Bạn xác nhận muốn đăng xuất?</div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" type="button" data-dismiss="modal">Hủy</button>
+                <form asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Action("Index", "Home", new { area = "" })">
+                    <button type="submit" class="btn btn-primary">Đăng xuất</button>
+                    </form>
+            </div>
+        </div>
+    </div>
+</div>
