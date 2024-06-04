@@ -35,7 +35,7 @@
                 </div>
                 <div class="form-group">
                     <label asp-for="Description"></label>
-                    <textarea asp-for="Description" class="form-control"></textarea>
+                    <textarea asp-for="Description" class="form-control" id="description"></textarea>
                     <span asp-validation-for="Description" class="text-danger"></span>
                 </div>
                 <div class="form-group">
@@ -58,4 +58,17 @@
     <div>
         <a asp-action="Index">Trở về</a>
     </div>
+    @section Scripts {
+        <script>
+            ClassicEditor
+                .create(document.querySelector('#description'), {
+                    ckfinder: {
+                        uploadUrl: '@Url.Action("UploadImage", "Product")' // Đảm bảo URL là chính xác
+                    }
+                })
+                .catch(error => {
+                    console.error(error);
+                });
+        </script>
+    }
 </div>

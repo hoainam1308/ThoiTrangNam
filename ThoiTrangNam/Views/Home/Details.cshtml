@@ -1,5 +1,4 @@
 ﻿@model ThoiTrangNam.Models.ProductDetailViewModel
-
 @{
     ViewData["Title"] = "Details";
 }
@@ -54,8 +53,6 @@
                 <div class="d-flex mb-3">
                 </div>
                 <h3 class="font-weight-semi-bold mb-4 text-warning">@Model.Product.SellPrice.ToString("#,##0") VNĐ</h3>
-                <pre class="mb-4" style="font-family:Arial; 20px;">@Model.Product.Description
-                </pre>                
                 <div class="d-flex align-items-center mb-4 pt-2">
                     <div class="input-group quantity mr-3" style="width: 130px;">
                         <div class="input-group-btn">
@@ -92,9 +89,8 @@
                 </div>
                 <div class="tab-content">
                     <div class="tab-pane fade show active" id="tab-pane-1">
-                        <h4 class="mb-3">Product Description</h4>
-                        <p>Eos no lorem eirmod diam diam, eos elitr et gubergren diam sea. Consetetur vero aliquyam invidunt duo dolores et duo sit. Vero diam ea vero et dolore rebum, dolor rebum eirmod consetetur invidunt sed sed et, lorem duo et eos elitr, sadipscing kasd ipsum rebum diam. Dolore diam stet rebum sed tempor kasd eirmod. Takimata kasd ipsum accusam sadipscing, eos dolores sit no ut diam consetetur duo justo est, sit sanctus diam tempor aliquyam eirmod nonumy rebum dolor accusam, ipsum kasd eos consetetur at sit rebum, diam kasd invidunt tempor lorem, ipsum lorem elitr sanctus eirmod takimata dolor ea invidunt.</p>
-                        <p>Dolore magna est eirmod sanctus dolor, amet diam et eirmod et ipsum. Amet dolore tempor consetetur sed lorem dolor sit lorem tempor. Gubergren amet amet labore sadipscing clita clita diam clita. Sea amet et sed ipsum lorem elitr et, amet et labore voluptua sit rebum. Ea erat sed et diam takimata sed justo. Magna takimata justo et amet magna et.</p>
+
+                        <p>@Html.EmbedMedia(Model.Product.Description)</p>
                     </div>
                     <div class="tab-pane fade" id="tab-pane-2">
                         <h4 class="mb-3">Additional Information</h4>
@@ -199,10 +195,10 @@
                                         }
                                     }
                                 </div>
-                            </div>                            
+                            </div>
                         </div>
                     </div>
-                </div>               
+                </div>
             </div>
         </div>
     </div>
@@ -214,7 +210,6 @@
     <div class="row px-xl-5">
         <div class="col">
             <div class="owl-carousel related-carousel">
-
             </div>
         </div>
     </div>
@@ -234,3 +229,10 @@
         });
     });
 </script>
+<style>
+    figure.image img {
+        width: 560px;
+        height: 315px;
+        object-fit: cover; /* Đảm bảo ảnh giữ tỷ lệ, cắt ảnh nếu cần thiết */
+    }
+</style>

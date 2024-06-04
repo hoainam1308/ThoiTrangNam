@@ -162,5 +162,31 @@ namespace ThoiTrangNam.Controllers
             await _productRepository.DeleteAsync(id);
             return RedirectToAction(nameof(Index));
         }
+        public async Task<IActionResult> UploadImage(IFormFile upload)
+        {
+            if (upload == null || upload.Length == 0)
+            {
+                return Json(new { uploaded = false, error = new { message = "No file uploaded." } });
+            }
+
+            var fileName = Path.GetFileName(upload.FileName);
+            var filePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/imagesCK", fileName);
+
+            try
+            {
+                using (var stream = new FileStream(filePath, FileMode.Create))
+                {
+                    await upload.CopyToAsync(stream);
+                }
+
+                var imageUrl = $"/imagesCK/{fileName}";
+
+                return Json(new { uploaded = true, url = imageUrl });
+            }
+            catch (Exception ex)
+            {
+                return Json(new { uploaded = false, error = new { message = "An error occurred while uploading the file." } });
+            }
+        }
     }
 }
