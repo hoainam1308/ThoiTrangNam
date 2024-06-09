@@ -1,5 +1,11 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using DinkToPdf;
+using DinkToPdf.Contracts;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.ModelBinding;
+using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.AspNetCore.Mvc.ViewEngines;
+using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using ThoiTrangNam.Models;
 using ThoiTrangNam.Repository;
 
@@ -11,11 +17,17 @@ namespace ThoiTrangNam.Controllers
         private readonly IOrderRepository _orderRepository;
         private readonly IProductRepository _productRepository;
         private readonly IProductImageRepository _productImageRepository;
-        public OrderController(IOrderRepository orderRepository, IProductRepository productRepository, IProductImageRepository productImageRepository)
+        private readonly ICompositeViewEngine _viewEngine;
+        private readonly IConverter _converter;
+        private readonly ITempDataProvider _tempDataProvider;
+        public OrderController(IOrderRepository orderRepository, IProductRepository productRepository, IProductImageRepository productImageRepository, ICompositeViewEngine viewEngine, ITempDataProvider tempDataProvider, IConverter converter)
         {
             _orderRepository = orderRepository;
             _productRepository = productRepository;
             _productImageRepository = productImageRepository;
+            _viewEngine = viewEngine;
+            _converter = converter;
+            _tempDataProvider = tempDataProvider;
         }
         public async Task<IActionResult> Index()
         {
@@ -51,5 +63,69 @@ namespace ThoiTrangNam.Controllers
             await _orderRepository.UpdateAsync(id, shopConfirm);
             return RedirectToAction(nameof(Index));
         }
+        public async Task<IActionResult> ExportInvoicePdf(int id)
+        {
+            var order = await _orderRepository.GetByIdAsync(id);
+            if (order == null)
+            {
+                return NotFound();
+            }
+            foreach (var item in order.OrderDetails)
+            {
+                item.Product = await _productRepository.GetByIdAsync(item.ProductId);
+            }
+
+            var htmlContent = await this.RenderViewAsync("Invoice", order);
+
+            var doc = new HtmlToPdfDocument()
+            {
+                GlobalSettings = {
+                    PaperSize = PaperKind.A4,
+                    Orientation = Orientation.Portrait,
+                },
+                Objects = {
+                    new ObjectSettings() {
+                        PagesCount = true,
+                        HtmlContent = htmlContent,
+                        WebSettings = { DefaultEncoding = "utf-8" },
+                        HeaderSettings = { FontName = "Arial", FontSize = 9, Right = "Page [page] of [toPage]", Line = true },
+                        FooterSettings = { FontName = "Arial", FontSize = 9, Line = true, Center = "Footer" }
+                    }
+                }
+            };
+
+            var pdf = _converter.Convert(doc);
+
+            return File(pdf, "application/pdf", $"Invoice_{id}.pdf");
+        }
+
+        private async Task<string> RenderViewAsync(string viewName, object model)
+        {
+            var viewResult = _viewEngine.FindView(ControllerContext, viewName, false);
+            if (!viewResult.Success)
+            {
+                throw new InvalidOperationException($"Couldn't find view '{viewName}'");
+            }
+
+            var viewDictionary = new ViewDataDictionary(new EmptyModelMetadataProvider(), new ModelStateDictionary())
+            {
+                Model = model
+            };
+
+            using (var sw = new StringWriter())
+            {
+                var viewContext = new ViewContext(
+                    ControllerContext,
+                    viewResult.View,
+                    viewDictionary,
+                    new TempDataDictionary(ControllerContext.HttpContext, _tempDataProvider),
+                    sw,
+                    new HtmlHelperOptions()
+                );
+                await viewResult.View.RenderAsync(viewContext);
+                return sw.ToString();
+            }
+        }
+
     }
 }

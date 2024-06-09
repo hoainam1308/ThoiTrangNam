@@ -38,14 +38,51 @@ namespace ThoiTrangNam.Controllers
                 .Include(od => od.Product)
                 .SumAsync(od => (od.Product.SellPrice - od.Product.BuyPrice) * od.Quantity);
 
+            var monthlyEarningsData = await _context.Orders
+               .Where(o => o.OrderDate.Year == currentYear)
+               .GroupBy(o => o.OrderDate.Month)
+               .Select(g => new
+               {
+                   Month = g.Key,
+                   TotalPrice = g.Sum(o => o.TotalPrice)
+               })
+               .ToListAsync();
+
+            decimal[] earningsPerMonth = new decimal[12];
+            foreach (var monthData in monthlyEarningsData)
+            {
+                earningsPerMonth[monthData.Month - 1] = monthData.TotalPrice;
+            }
             ViewBag.AnnualEarnings = annualEarnings;
             ViewBag.MonthlyEarnings = monthlyEarnings;
             ViewBag.TotalUsers = totalUsers;
             ViewBag.TotalProfit = totalProfit;
+            ViewBag.EarningsPerMonth = earningsPerMonth;
 
 
             return View();
         }
-        
-    }
+		[HttpGet]
+		public async Task<IActionResult> GetEarningsData(int year)
+		{
+			var monthlyEarningsData = await _context.Orders
+				.Where(o => o.OrderDate.Year == year)
+				.GroupBy(o => o.OrderDate.Month)
+				.Select(g => new
+				{
+					Month = g.Key,
+					TotalPrice = g.Sum(o => o.TotalPrice)
+				})
+				.ToListAsync();
+
+			decimal[] earningsPerMonth = new decimal[12];
+			foreach (var monthData in monthlyEarningsData)
+			{
+				earningsPerMonth[monthData.Month - 1] = monthData.TotalPrice;
+			}
+
+			return Json(earningsPerMonth);
+		}
+		
+	}
 }

@@ -1,0 +1,97 @@
+﻿@model ThoiTrangNam.Models.Order
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title>Hóa đơn</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+        }
+
+        .container {
+            margin: 0 auto;
+            padding: 20px;
+            max-width: 800px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+
+        .header, .footer {
+            text-align: center;
+        }
+
+        .details {
+            margin-bottom: 20px;
+        }
+
+            .details div {
+                margin-bottom: 10px;
+            }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+        }
+
+        table, th, td {
+            border: 1px solid #ddd;
+        }
+
+        th, td {
+            padding: 8px;
+            text-align: left;
+        }
+
+        .total {
+            font-size: 20px;
+            font-weight: bold;
+            text-align: right;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Hóa đơn</h1>
+        </div>
+        <div class="details">
+            <div><strong>Tên khách hàng:</strong> @Model.CustomerName</div>
+            <div><strong>Số điện thoại:</strong> @Model.PhoneNumber</div>
+            <div><strong>Địa chỉ giao hàng:</strong> @Model.ShippingAddress</div>
+            <div><strong>Ngày đặt hàng:</strong> @Model.OrderDate.ToString("dd/MM/yyyy")</div>
+        </div>
+        <table>
+            <thead>
+                <tr>
+                    <th>Tên sản phẩm</th>
+                    <th>Số lượng</th>
+                    <th>Giá</th>
+                    <th>Thành tiền</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model.OrderDetails)
+                {
+                    var totalPrice = item.Quantity * item.Price;
+                    <tr>
+                        
+                        <td>@item.Product.ProductName</td>
+                        <td>@item.Quantity</td>
+                        <td>@item.Price.ToString("#,##0") VNĐ</td>
+                        <td>@totalPrice.ToString("#,##0") VNĐ</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+        <div class="total">
+            <strong>Tổng tiền: @Model.TotalPrice.ToString("#,##0") VNĐ</strong>
+        </div>
+        <div class="footer">
+            <p>Cảm ơn quý khách đã mua hàng!</p>
+        </div>
+    </div>
+</body>
+</html>

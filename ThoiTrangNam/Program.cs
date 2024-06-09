@@ -1,4 +1,6 @@
-﻿using Microsoft.AspNetCore.Authentication.Google;
+﻿using DinkToPdf.Contracts;
+using DinkToPdf;
+using Microsoft.AspNetCore.Authentication.Google;
 using Microsoft.AspNetCore.Http.Features;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -6,6 +8,9 @@ using Microsoft.Extensions.Options;
 using System.Text.Json.Serialization;
 using ThoiTrangNam.Models;
 using ThoiTrangNam.Repository;
+using System.Runtime.Loader;
+using System.Reflection;
+
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -23,7 +28,7 @@ builder.Services.AddControllersWithViews().AddJsonOptions(options =>
 {
     options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.Preserve;
 });
-
+builder.Services.AddSingleton(typeof(IConverter), new SynchronizedConverter(new PdfTools()));
 builder.Services.AddScoped<IProductRepository, EFProductRepository>();
 builder.Services.AddScoped<ICategoryRepository, EFCategoryRepository>();
 
@@ -31,6 +36,8 @@ builder.Services.AddScoped<IClassificationRepository, EFClassificationRepository
 builder.Services.AddScoped<IProductImageRepository, EFProductImageRepository>();
 builder.Services.AddScoped<IOrderRepository, EFOrderRepository>();
 builder.Services.AddScoped<IOrderDetailRepository, EFOrderDetailRepository>();
+
+builder.Services.AddSingleton(typeof(IConverter), new SynchronizedConverter(new PdfTools()));
 // Add services to the container.
 builder.Services.AddDistributedMemoryCache();
 builder.Services.AddSession(options =>

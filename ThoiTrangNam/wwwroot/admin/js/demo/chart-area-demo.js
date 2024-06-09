@@ -1,3 +1,4 @@
+
 // Set new default font family and font color to mimic Bootstrap's default styling
 Chart.defaults.global.defaultFontFamily = 'Nunito', '-apple-system,system-ui,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif';
 Chart.defaults.global.defaultFontColor = '#858796';
@@ -46,7 +47,7 @@ var myLineChart = new Chart(ctx, {
       pointHoverBorderColor: "rgba(78, 115, 223, 1)",
       pointHitRadius: 10,
       pointBorderWidth: 2,
-      data: [0, 10000, 5000, 15000, 10000, 20000, 15000, 25000, 20000, 30000, 25000, 40000],
+        data: JSON.parse(document.getElementById('earningsData').textContent),
     }],
   },
   options: {
@@ -116,4 +117,27 @@ var myLineChart = new Chart(ctx, {
     }
   }
 
+});
+document.getElementById('yearSelect').addEventListener('change', function () {
+    var selectedYear = this.value;
+    fetch(`/Admin/GetEarningsData?year=${selectedYear}`)
+        .then(response => response.json())
+        .then(data => {
+            updateChart(data);
+        });
+});
+
+function updateChart(data) {
+    myLineChart.data.datasets[0].data = data;
+    myLineChart.update();
+}
+
+document.addEventListener('DOMContentLoaded', function () {
+    var currentYear = new Date().getFullYear();
+    document.getElementById('yearSelect').value = currentYear;
+    fetch(`/Admin/GetEarningsData?year=${currentYear}`)
+        .then(response => response.json())
+        .then(data => {
+            updateChart(data);
+        });
 });
