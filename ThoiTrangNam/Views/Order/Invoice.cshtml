@@ -88,6 +88,16 @@
         </table>
         <div class="total">
             <strong>Tổng tiền: @Model.TotalPrice.ToString("#,##0") VNĐ</strong>
+            </br>
+            @if (Model.IsPaymented == true)
+            {
+                <h5>Đã thanh toán</h5>
+            }
+            else
+            {
+                <h5>Chưa thanh toán (COD)</h5>
+            }
+           
         </div>
         <div class="footer">
             <p>Cảm ơn quý khách đã mua hàng!</p>

@@ -15,6 +15,7 @@ namespace ThoiTrangNam.Models
         public string CustomerName { get; set; }
         [Phone]
         public string PhoneNumber { get; set; }
+        public bool? IsPaymented { get; set; }
         public string ShippingAddress { get; set; }
         public string? Notes { get; set; }
         [ForeignKey("UserId")]

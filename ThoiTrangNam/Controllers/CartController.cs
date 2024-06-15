@@ -129,6 +129,7 @@ namespace ThoiTrangNam.Controllers
             order.OrderDate = DateTime.UtcNow;
             order.SubTotal = cart.ComputeToTalValue();
             order.TotalPrice = cart.ComputeToTotal();
+            order.IsPaymented = false;
             _context.Orders.Add(order);
             await _context.SaveChangesAsync();
             
@@ -197,7 +198,8 @@ namespace ThoiTrangNam.Controllers
                 TotalPrice = cart.ComputeToTotal(),
                 CustomerName = user.FullName,
                 PhoneNumber = user.PhoneNumber,
-                ShippingAddress = user.Address
+                ShippingAddress = user.Address,
+                IsPaymented = true
                 // Thêm các thông tin khác của đơn hàng nếu cần
             };
 

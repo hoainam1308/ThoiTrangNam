@@ -24,6 +24,9 @@
             <th>
                 @Html.DisplayNameFor(model => model.Notes)
             </th>
+            <th>
+                @Html.DisplayNameFor(model => model.IsPaymented)
+            </th>
             <th style="text-align: center;">
                 <p>Checked</p>
             </th>
@@ -53,6 +56,17 @@
                 <td>
                     @Html.DisplayFor(modelItem => item.Notes)
                 </td>
+                @if (item.IsPaymented == true)
+                {
+                <td>
+                    <h5>Đã thanh toán</h5>    
+                </td>
+                }
+                else{
+                <td>
+                    <h5>Chưa thanh toán</h5>
+                </td>
+                }
                 <td style="text-align: center;">
                     @if(item.isConfirm == null){
                         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="red" class="bi bi-x-circle-fill" viewBox="0 0 16 16">
