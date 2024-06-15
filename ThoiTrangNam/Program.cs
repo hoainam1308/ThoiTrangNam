@@ -36,7 +36,8 @@ builder.Services.AddScoped<IClassificationRepository, EFClassificationRepository
 builder.Services.AddScoped<IProductImageRepository, EFProductImageRepository>();
 builder.Services.AddScoped<IOrderRepository, EFOrderRepository>();
 builder.Services.AddScoped<IOrderDetailRepository, EFOrderDetailRepository>();
-
+builder.Services.AddSingleton<IVnPayService, EFVnPayService>();
+//use DinktoPDF 
 builder.Services.AddSingleton(typeof(IConverter), new SynchronizedConverter(new PdfTools()));
 // Add services to the container.
 builder.Services.AddDistributedMemoryCache();
