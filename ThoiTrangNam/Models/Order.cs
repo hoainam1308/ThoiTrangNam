@@ -22,5 +22,6 @@ namespace ThoiTrangNam.Models
         [ValidateNever]
         public ApplicationUser ApplicationUser { get; set; }
         public List<OrderDetail> OrderDetails { get; set; }
+       
     }
 }

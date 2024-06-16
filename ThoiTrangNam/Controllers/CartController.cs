@@ -98,6 +98,49 @@ namespace ThoiTrangNam.Controllers
             return View(new Order());
         }
         [HttpPost]
+        public IActionResult ApplyCoupon(string couponCode)
+        {
+            var cart = HttpContext.Session.GetObjectFromJson<Cart>("cart");
+            var coupon = _context.Coupons.FirstOrDefault(c => c.Code == couponCode);
+
+            if (coupon == null)
+            {
+                TempData["Message"] = "Coupon không tồn tại.";
+                return RedirectToAction("Index");
+            }
+
+            if (coupon.ExpirationDate < DateTime.Now)
+            {
+                TempData["Message"] = "Coupon đã hết hạn.";
+                return RedirectToAction("Index");
+            }
+
+            if (coupon.UsageLimit <= coupon.TimesUsed)
+            {
+                TempData["Message"] = "Coupon đã hết lượt sử dụng.";
+                return RedirectToAction("Index");
+            }
+
+            // Áp dụng coupon vào giỏ hàng
+            cart.ApplyCoupon(coupon);
+            HttpContext.Session.SetObjectAsJson("cart", cart);
+            TempData["DiscountMessage"] = $"Đã giảm: -{coupon.DiscountAmount.ToString("#,##0")} VNĐ";
+
+            TempData["Message"] = "Áp dụng coupon thành công.";
+            return RedirectToAction("Index");
+        }
+
+        [HttpPost]
+        public IActionResult RemoveCoupon()
+        {
+            var cart = HttpContext.Session.GetObjectFromJson<Cart>("cart");
+            cart.RemoveCoupon();
+            HttpContext.Session.SetObjectAsJson("cart", cart);
+
+            TempData["Message"] = "Đã xóa coupon.";
+            return RedirectToAction("Index");
+        }
+        [HttpPost]
         public async Task<IActionResult> Checkout(Order order, string payment = "Dat hang(COD)")
         {
            
@@ -110,7 +153,16 @@ namespace ThoiTrangNam.Controllers
                 // Xử lý khi giỏ hàng trống
                 return RedirectToAction("Index", "Home");
             }
-            
+            if (cart.AppliedCoupon != null)
+            {
+                var appliedCoupon = _context.Coupons.FirstOrDefault(c => c.Id == cart.AppliedCoupon.Id);
+                if (appliedCoupon != null)
+                {
+                    appliedCoupon.TimesUsed++;
+                    await _context.SaveChangesAsync();
+                }
+            }
+
             // Lưu thông tin đơn hàng
             var user = await _userManager.GetUserAsync(User);
             if (payment == "Thanh toan VNPAY")
@@ -129,7 +181,7 @@ namespace ThoiTrangNam.Controllers
             order.OrderDate = DateTime.UtcNow;
             order.SubTotal = cart.ComputeToTalValue();
             order.TotalPrice = cart.ComputeToTotal();
-            order.IsPaymented = false;
+            order.IsPaymented = true;
             _context.Orders.Add(order);
             await _context.SaveChangesAsync();
             

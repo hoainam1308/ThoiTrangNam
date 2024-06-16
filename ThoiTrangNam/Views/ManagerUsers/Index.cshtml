@@ -50,23 +50,21 @@
                     @Html.DisplayFor(modelItem => user.LockoutEnd)
                 </td>
                 <td>
-                    <a asp-action="Edit" asp-route-id="@user.Id" class="btn btn-warning">Edit</a>
-                    <a asp-action="ChangePassword" asp-route-id="@user.Id" class="btn btn-info">Change Password</a>
+                    <div class="btn-group" role="group">
+                    <a asp-action="Edit" asp-route-id="@user.Id" class="btn btn-warning">Sửa thông tin</a>
+                    <a asp-action="ChangePassword" asp-route-id="@user.Id" class="btn btn-info">Đổi mật khẩu</a>
                   
                     @if (user.LockoutEnd.HasValue && user.LockoutEnd > DateTime.UtcNow)
                     {
-                        <a asp-action="Unlock" asp-route-id="@user.Id" class="btn btn-success">Unlock</a>
+                        <a asp-action="Unlock" asp-route-id="@user.Id" class="btn btn-success">Mở khóa</a>
                     }
                     else
                     {
-                        <a asp-action="Lock" asp-route-id="@user.Id" class="btn btn-danger">Lock</a>
+                        <a asp-action="Lock" asp-route-id="@user.Id" class="btn btn-danger">Khóa</a>
                     }
+                    </div>
                 </td>
             </tr>
         }
     </tbody>
 </table>
-
-<div>
-    <a asp-action="Index" class="btn btn-secondary">Back to Home</a>
-</div>

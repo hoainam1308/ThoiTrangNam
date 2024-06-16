@@ -1,19 +1,27 @@
-﻿namespace ThoiTrangNam.Models
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+
+namespace ThoiTrangNam.Models
 {
     public class Cart
     {
         public List<CartItem> Items { get; set; } = new List<CartItem>();
 
-        public void AddItem(Product product, int quatity)
+        // Coupon related properties
+        public Coupon AppliedCoupon { get; set; } // Store applied coupon
+        public decimal TotalDiscount { get; set; } // Total discount amount applied
+
+        public void AddItem(Product product, int quantity)
         {
-            CartItem? item = Items.Where(p => p.Product.ProductId == product.ProductId).FirstOrDefault();
+            CartItem item = Items.FirstOrDefault(p => p.Product.ProductId == product.ProductId);
             if (item == null)
             {
-                Items.Add(new CartItem { Product = product, Quantity = quatity });
+                Items.Add(new CartItem { Product = product, Quantity = quantity });
             }
             else
             {
-                item.Quantity += quatity;
+                item.Quantity += quantity;
             }
         }
 
@@ -24,25 +32,51 @@
 
         public decimal ComputeToTalValue()
         {
-            return Items.Sum(e => e.Product.SellPrice * e.Quantity);
+            decimal subtotal = Items.Sum(e => e.Product.SellPrice * e.Quantity);
+            return subtotal - TotalDiscount;
+        }
+
+        public void ApplyCoupon(Coupon coupon)
+        {
+            if (coupon != null && coupon.ExpirationDate >= DateTime.Now)
+            {
+                AppliedCoupon = coupon;
+                TotalDiscount = AppliedCoupon.IsPercentage ?
+                    (Items.Sum(e => e.Product.SellPrice * e.Quantity) * AppliedCoupon.DiscountAmount / 100) :
+                    AppliedCoupon.DiscountAmount;
+            }
+        }
+
+        public void RemoveCoupon()
+        {
+            AppliedCoupon = null;
+            TotalDiscount = 0;
         }
 
         public decimal ComputeToTotal()
         {
-            if(Items.Sum(e => e.Product.SellPrice * e.Quantity) < 1000000)
-                return Items.Sum(e => e.Product.SellPrice * e.Quantity) + 50000;
-            return Items.Sum(e => e.Product.SellPrice * e.Quantity);
+            decimal total = ComputeToTalValue();
+
+            // Add shipping fee if total is less than 1000000
+            if (total < 1000000)
+            {
+                total += 50000;
+            }
+
+            return total;
         }
 
-        public void Clear() { Items.Clear(); }
-
-
+        public void Clear()
+        {
+            Items.Clear();
+            RemoveCoupon(); // Clear coupon when cart is cleared
+        }
     }
+
     public class CartItem
     {
         public int CartItemID { get; set; }
-        public Product Product { get; set; } = new();
+        public Product Product { get; set; }
         public int Quantity { get; set; }
-        
     }
 }

@@ -1,0 +1,70 @@
+﻿@model IEnumerable<ThoiTrangNam.Models.Coupon>
+
+@{
+	ViewData["Title"] = "Coupons";
+	Layout = "~/Views/Shared/_LayoutAdmin.cshtml";
+}
+
+<h1>Coupons</h1>
+<h3>
+	<a asp-action="Create" class="btn btn-secondary">Tạo mới</a>
+</h3>
+<table class="table">
+	<thead>
+		<tr>
+			<th>
+				@Html.DisplayNameFor(model => model.Code)
+			</th>
+			<th>
+				@Html.DisplayNameFor(model => model.DiscountAmount)
+			</th>
+			<th>
+				@Html.DisplayNameFor(model => model.IsPercentage)
+			</th>
+			<th>
+				@Html.DisplayNameFor(model => model.ExpirationDate)
+			</th>
+			<th>
+				@Html.DisplayNameFor(model => model.UsageLimit)
+			</th>
+			<th>
+				@Html.DisplayNameFor(model => model.TimesUsed)
+			</th>
+			<th></th>
+		</tr>
+	</thead>
+	<tbody>
+		@if (Model != null)
+		{
+			foreach (var item in Model)
+			{
+				<tr>
+					<td>
+						@Html.DisplayFor(modelItem => item.Code)
+					</td>
+					<td>
+						@Html.DisplayFor(modelItem => item.DiscountAmount)
+					</td>
+					<td>
+						@Html.DisplayFor(modelItem => item.IsPercentage)
+					</td>
+					<td>
+						@Html.DisplayFor(modelItem => item.ExpirationDate)
+					</td>
+					<td>
+						@Html.DisplayFor(modelItem => item.UsageLimit)
+					</td>
+					<td>
+						@Html.DisplayFor(modelItem => item.TimesUsed)
+					</td>
+					<td>
+						<div class="btn-group" role="group">
+							<a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-primary">Sửa</a>
+							<a asp-action="Delete" asp-route-id="@item.Id" class="btn btn-danger">Xóa</a>
+						</div>
+					</td>
+				</tr>
+			}
+		}
+	</tbody>
+</table>

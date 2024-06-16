@@ -1,6 +1,7 @@
 ﻿@model ThoiTrangNam.Models.ApplicationUser
 @{
     ViewData["Title"] = "Edit User";
+    Layout = "~/Views/Shared/_LayoutAdmin.cshtml";
 }
 
 <h1>Edit User</h1>
@@ -27,9 +28,9 @@
         <input asp-for="Age" class="form-control" />
         <span asp-validation-for="Age" class="text-danger"></span>
     </div>
-    <button type="submit" class="btn btn-primary">Save</button>
+    <button type="submit" class="btn btn-primary">Cập nhật</button>
 </form>
 
 <div>
-    <a asp-action="Index">Back to List</a>
+    <a asp-action="Index" class="btn btn-secondary">Trở về</a>
 </div>

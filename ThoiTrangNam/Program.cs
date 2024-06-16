@@ -31,7 +31,7 @@ builder.Services.AddControllersWithViews().AddJsonOptions(options =>
 builder.Services.AddSingleton(typeof(IConverter), new SynchronizedConverter(new PdfTools()));
 builder.Services.AddScoped<IProductRepository, EFProductRepository>();
 builder.Services.AddScoped<ICategoryRepository, EFCategoryRepository>();
-
+builder.Services.AddScoped<ICouponRepository, EFCouponRepository>();
 builder.Services.AddScoped<IClassificationRepository, EFClassificationRepository>();
 builder.Services.AddScoped<IProductImageRepository, EFProductImageRepository>();
 builder.Services.AddScoped<IOrderRepository, EFOrderRepository>();

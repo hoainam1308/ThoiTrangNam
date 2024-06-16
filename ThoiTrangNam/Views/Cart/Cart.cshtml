@@ -14,6 +14,7 @@
 </div>
 <!-- Breadcrumb End -->
 <!-- Cart Start -->
+
 @if (Model != null && Model.Items.Any())
 {
     <div class="container-fluid">
@@ -115,8 +116,37 @@
                             }
                         </div>
                     </div>
+                    @using (Html.BeginForm("ApplyCoupon", "Cart", FormMethod.Post))
+                    {
+                        <div class="form-group row">
+                            <label for="couponCode" class="col-sm-2 col-form-label">Coupon Code:</label>
+                            <div class="col-sm-5">
+                                <input type="text" class="form-control" id="couponCode" name="couponCode">
+                            </div>
+                            <div class="col-sm-5">
+                                <button type="submit" class="btn btn-primary">Apply Coupon</button>
+                                @if (Model.AppliedCoupon != null)
+                                {
+                                    <button type="submit" formaction="@Url.Action("RemoveCoupon", "Cart")" class="btn btn-danger">Remove Coupon</button>
+
+                                }
+                            </div>
+                        </div>
+                    }
+                    @if (TempData["Message"] != null)
+                    {
+                        <div class="alert alert-info">
+                            @TempData["Message"]
+                        </div>
+                    }
                     <div class="pt-2">
+                        @if (TempData["DiscountMessage"] != null)
+                        {
+                            <h10><p class="text-muted">@TempData["DiscountMessage"]</p></h10>
+
+                        }
                         <div class="d-flex justify-content-between mt-2">
+                           
                             <h5>Total</h5>
                             <h5>@Model.ComputeToTotal().ToString("#,##0") VNĐ</h5>
                         </div>
