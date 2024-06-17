@@ -8,6 +8,8 @@ using ThoiTrangNam.Extensions;
 using ThoiTrangNam.Models;
 using ThoiTrangNam.Repository;
 using Microsoft.DiaSymReader;
+using ThoiTrangNam.Helper;
+using Microsoft.VisualBasic;
 
 namespace ThoiTrangNam.Controllers
 {
@@ -18,15 +20,17 @@ namespace ThoiTrangNam.Controllers
         private readonly IProductRepository _productRepository;
         private readonly IOrderRepository _orderRepository;
         private readonly IVnPayService _vnpayRepository;
+        private readonly PaypalClient _paypalClient;
         private readonly ApplicationDbContext _context;
         private readonly UserManager<ApplicationUser> _userManager;
-        public CartController(ApplicationDbContext context, UserManager<ApplicationUser> userManager, IProductRepository productRepository, IOrderRepository orderRepository, IVnPayService vnpayRepository)
+        public CartController(ApplicationDbContext context, UserManager<ApplicationUser> userManager, IProductRepository productRepository, IOrderRepository orderRepository, IVnPayService vnpayRepository, PaypalClient paypalClient)
         {
             _productRepository = productRepository;
             _context = context;
             _userManager = userManager;
             _orderRepository = orderRepository;
             _vnpayRepository = vnpayRepository;
+            _paypalClient = paypalClient;
         }
         public async Task<IActionResult> AddToCart(int productId)
         {
@@ -68,7 +72,7 @@ namespace ThoiTrangNam.Controllers
             var cart = HttpContext.Session.GetObjectFromJson<Cart>("cart");
             return View("Cart", cart);
         }
-        
+
         // Các actions khác...
         private async Task<Product> GetProductFromDatabase(int productId)
         {
@@ -95,6 +99,7 @@ namespace ThoiTrangNam.Controllers
                 // Xử lý khi giỏ hàng trống
                 return RedirectToAction("Index", "Home");
             }
+            ViewBag.PaypalClientdId = _paypalClient.ClientId;
             return View(new Order());
         }
         [HttpPost]
@@ -143,10 +148,10 @@ namespace ThoiTrangNam.Controllers
         [HttpPost]
         public async Task<IActionResult> Checkout(Order order, string payment = "Dat hang(COD)")
         {
-           
 
-          
-            
+
+
+
             var cart = HttpContext.Session.GetObjectFromJson<Cart>("cart");
             if (cart == null || cart.Items.Count == 0)
             {
@@ -173,7 +178,7 @@ namespace ThoiTrangNam.Controllers
                     CreatedDate = DateTime.Now,
                     Description = "Thanh toán đơn hàng",
                     FullName = user.UserName,
-                    OrderId = new Random().Next(1000,10000)
+                    OrderId = new Random().Next(1000, 10000)
                 };
                 return Redirect(_vnpayRepository.CreatePaymentUrl(vnPayModel, HttpContext));
             }
@@ -184,7 +189,7 @@ namespace ThoiTrangNam.Controllers
             order.IsPaymented = true;
             _context.Orders.Add(order);
             await _context.SaveChangesAsync();
-            
+
             // Lưu các mục trong giỏ hàng thành các OrderDetail
             foreach (var item in cart.Items)
             {
@@ -203,7 +208,7 @@ namespace ThoiTrangNam.Controllers
                 client.EnableSsl = true;
                 client.Credentials = new NetworkCredential(StaticClass.FromEmail, StaticClass.Password);
                 string subject = "Đơn hàng mới";
-                string infor = "Tên khách hàng: " + order.CustomerName + "\nĐịa chỉ: " + order.ShippingAddress + "\nSĐT: " + order.PhoneNumber + "\nSố tiền: "+ order.TotalPrice.ToString("#,##0") + " VNĐ";
+                string infor = "Tên khách hàng: " + order.CustomerName + "\nĐịa chỉ: " + order.ShippingAddress + "\nSĐT: " + order.PhoneNumber + "\nSố tiền: " + order.TotalPrice.ToString("#,##0") + " VNĐ";
                 MailMessage message = new MailMessage(StaticClass.FromEmail, StaticClass.MyEmail, subject, infor);
                 client.Send(message);
                 ViewBag.Message = "Mail Send";
@@ -218,7 +223,7 @@ namespace ThoiTrangNam.Controllers
             return View(orderId);
         }
         [Authorize]
-        public IActionResult PaymentFail() 
+        public IActionResult PaymentFail()
         {
             return View();
         }
@@ -233,7 +238,7 @@ namespace ThoiTrangNam.Controllers
                 return RedirectToAction("PaymentFail");
             }
             //
-           var cart = HttpContext.Session.GetObjectFromJson<Cart>("cart");
+            var cart = HttpContext.Session.GetObjectFromJson<Cart>("cart");
             if (cart == null || cart.Items.Count == 0)
             {
                 // Xử lý khi giỏ hàng trống
@@ -291,5 +296,103 @@ namespace ThoiTrangNam.Controllers
             TempData["Message"] = "Thanh toán thành công";
             return RedirectToAction("OrderCompleted", new { orderId = order.Id });
         }
+        #region Paypal payment
+        [Authorize]
+        [HttpPost("/Cart/create-paypal-order")]
+        public async Task<IActionResult> CreatePaypalOrder(CancellationToken cancellationToken)
+        {
+            var cart = HttpContext.Session.GetObjectFromJson<Cart>("cart");
+            // Thông tin đơn hàng gửi qua Paypal
+            var tongTien = cart.ComputeToTotal().ToString();
+            var donViTienTe = "USD";
+            var maDonHangThamChieu = "DH" + DateTime.Now.Ticks.ToString();
+
+            try
+            {
+                var response = await _paypalClient.CreateOrder(tongTien, donViTienTe, maDonHangThamChieu);
+
+                return Ok(response);
+            }
+            catch (Exception ex)
+            {
+                var error = new { ex.GetBaseException().Message };
+                return BadRequest(error);
+            }
+        }
+
+        [Authorize]
+        [HttpPost("/Cart/capture-paypal-order")]
+        public async Task<IActionResult> CapturePaypalOrder(string orderID, CancellationToken cancellationToken)
+        {
+            try
+            {
+                var cart = HttpContext.Session.GetObjectFromJson<Cart>("cart");
+                var response = await _paypalClient.CaptureOrder(orderID);
+
+                if (cart == null || cart.Items.Count == 0)
+                {
+                    // Xử lý khi giỏ hàng trống
+                    return RedirectToAction("Index", "Home");
+                }
+
+                // Tạo đơn hàng mới và lưu vào cơ sở dữ liệu
+                var user = await _userManager.GetUserAsync(User);
+                var order = new Order
+                {
+                    UserId = user.Id,
+                    OrderDate = DateTime.UtcNow,
+                    SubTotal = cart.ComputeToTalValue(),
+                    TotalPrice = cart.ComputeToTotal(),
+                    CustomerName = user.FullName,
+                    PhoneNumber = user.PhoneNumber,
+                    ShippingAddress = user.Address,
+                    IsPaymented = true
+                    // Thêm các thông tin khác của đơn hàng nếu cần
+                };
+
+                _context.Orders.Add(order);
+                await _context.SaveChangesAsync();
+
+                // Lưu các mục trong giỏ hàng thành các OrderDetail
+                foreach (var item in cart.Items)
+                {
+                    var orderDetail = new OrderDetail
+                    {
+                        OrderId = order.Id,
+                        ProductId = item.Product.ProductId,
+                        Quantity = item.Quantity,
+                        Price = item.Product.SellPrice
+                    };
+                    _context.OrderDetails.Add(orderDetail);
+                }
+                await _context.SaveChangesAsync();
+
+                // Xóa giỏ hàng sau khi đã thanh toán
+                HttpContext.Session.Remove("cart");
+
+                // Gửi email xác nhận đơn hàng nếu cần
+                using (SmtpClient client = new SmtpClient("smtp.gmail.com", 587))
+                {
+                    client.EnableSsl = true;
+                    client.Credentials = new NetworkCredential(StaticClass.FromEmail, StaticClass.Password);
+                    string subject = "Đơn hàng mới";
+                    string infor = "Tên khách hàng: " + order.CustomerName + "\nĐịa chỉ: " + order.ShippingAddress + "\nSĐT: " + order.PhoneNumber + "\nSố tiền: " + order.TotalPrice.ToString("#,##0") + " VNĐ";
+                    MailMessage message = new MailMessage(StaticClass.FromEmail, StaticClass.MyEmail, subject, infor);
+                    client.Send(message);
+                    ViewBag.Message = "Mail Sent";
+                }
+
+                // Chuyển hướng đến trang xác nhận đơn hàng
+                TempData["Message"] = "Thanh toán thành công";
+                return RedirectToAction("OrderCompleted", new { orderId = order.Id });
+            }
+            catch (Exception ex)
+            {
+                var error = new { ex.GetBaseException().Message };
+                return BadRequest(error);
+            }
+        }
+
+        #endregion
     }
 }

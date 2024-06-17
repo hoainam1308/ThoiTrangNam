@@ -125,11 +125,7 @@
                 }
                 Input = new()
                 {
-                    RoleList = _roleManager.Roles.Select(x => x.Name).Select(i =>  new SelectListItem
-                    {
-                        Text = i,
-                        Value = i
-                    })
+                    Role = SD.Role_Customer
                 };
                 ReturnUrl = returnUrl;
                 ExternalLogins = (await _signInManager.GetExternalAuthenticationSchemesAsync()).ToList();

@@ -10,6 +10,7 @@ using ThoiTrangNam.Models;
 using ThoiTrangNam.Repository;
 using System.Runtime.Loader;
 using System.Reflection;
+using ThoiTrangNam.Helper;
 
 
 var builder = WebApplication.CreateBuilder(args);
@@ -52,10 +53,23 @@ builder.Services.Configure<FormOptions>(options =>
 {
     options.MultipartBodyLengthLimit = 60000000; // 100MB
 });
+builder.Services.AddSingleton(x =>
+    new PaypalClient(
+        builder.Configuration["PaypalOptions:AppId"],
+        builder.Configuration["PaypalOptions:AppSecret"],
+        builder.Configuration["PaypalOptions:Mode"]
+    )
+);
+
 builder.Services.AddAuthentication().AddFacebook(opt =>
 {
     opt.ClientId = "1022879035835933";
     opt.ClientSecret = "bb5d93a484093b624a3ff63efaf8d95b";
+    opt.Events.OnRedirectToAuthorizationEndpoint = (context) =>
+    {
+        context.Response.Redirect(context.RedirectUri + "&prompt=select_account");
+        return Task.CompletedTask;
+    };
 
 });
 builder.Services.AddAuthentication().AddGoogle(opt =>
