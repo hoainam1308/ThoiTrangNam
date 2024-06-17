@@ -76,5 +76,15 @@ namespace ThoiTrangNam.Repository
                         .Where(x => x.RemovedDiacriticsName.Contains(queryStr))
                         .ToListAsync();
         }
+        public async Task DecreaseQuantityAsync(int productId, int quantity)
+        {
+            var product = await _context.Products.FindAsync(productId);
+            if (product != null)
+            {
+                product.Quantity -= quantity;
+                await _context.SaveChangesAsync();
+            }
+        }
+
     }
 }

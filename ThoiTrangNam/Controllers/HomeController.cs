@@ -37,6 +37,7 @@ namespace ThoiTrangNam.Controllers
         public async Task<IActionResult> Index()
         {
             var products = await _productRepository.GetAllAsync();
+            products = products.Where(p => p.Quantity > 0).ToList();
             return View(products);
         }
         public async Task<IActionResult> IndexSome()
@@ -104,7 +105,7 @@ namespace ThoiTrangNam.Controllers
             {
                 search = StaticClass.LocDau(query);
             }
-            var products = await _context.Products.Include(p => p.Category).Where(p => p.RemovedDiacriticsName.Contains(search)).ToListAsync();
+            var products = await _context.Products.Include(p => p.Category).Where(p => p.RemovedDiacriticsName.Contains(search) && p.Quantity>0).ToListAsync();
             switch (orderBy)
             {
                 case 1:

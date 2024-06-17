@@ -15,5 +15,6 @@ namespace ThoiTrangNam.Repository
         Task AddAsync(Product product);
         Task UpdateAsync(Product product);
         Task DeleteAsync(int id);
+        Task DecreaseQuantityAsync(int productId, int quantity);
     }
 }

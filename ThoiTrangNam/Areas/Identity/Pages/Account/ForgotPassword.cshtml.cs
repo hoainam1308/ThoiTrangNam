@@ -73,13 +73,15 @@ namespace ThoiTrangNam.Areas.Identity.Pages.Account
 
                 await _emailSender.SendEmailAsync(
                     Input.Email,
-                    "Reset Password",
-                    $"Please reset your password by <a href='{HtmlEncoder.Default.Encode(callbackUrl)}'>clicking here</a>.");
+                    "Đặt Lại Mật Khẩu",
+                    $"Vui lòng đặt lại mật khẩu của bạn bằng cách <a href='{HtmlEncoder.Default.Encode(callbackUrl)}'>nhấp vào đây</a>.");
 
                 return RedirectToPage("./ForgotPasswordConfirmation");
             }
 
             return Page();
         }
+       
+
     }
 }

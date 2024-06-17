@@ -167,7 +167,7 @@ namespace ThoiTrangNam.Controllers
                     await _context.SaveChangesAsync();
                 }
             }
-
+            
             // Lưu thông tin đơn hàng
             var user = await _userManager.GetUserAsync(User);
             if (payment == "Thanh toan VNPAY")
@@ -187,6 +187,7 @@ namespace ThoiTrangNam.Controllers
             order.SubTotal = cart.ComputeToTalValue();
             order.TotalPrice = cart.ComputeToTotal();
             order.IsPaymented = true;
+
             _context.Orders.Add(order);
             await _context.SaveChangesAsync();
 
@@ -201,6 +202,7 @@ namespace ThoiTrangNam.Controllers
                     Price = item.Product.SellPrice
                 };
                 _context.OrderDetails.Add(orderDetail);
+                await _productRepository.DecreaseQuantityAsync(item.Product.ProductId, item.Quantity);
             }
             await _context.SaveChangesAsync();
             using (SmtpClient client = new SmtpClient("smtp.gmail.com", 587))
@@ -261,6 +263,7 @@ namespace ThoiTrangNam.Controllers
             };
 
             _context.Orders.Add(order);
+
             await _context.SaveChangesAsync();
 
             // Lưu các mục trong giỏ hàng thành các OrderDetail
@@ -274,6 +277,7 @@ namespace ThoiTrangNam.Controllers
                     Price = item.Product.SellPrice
                 };
                 _context.OrderDetails.Add(orderDetail);
+                await _productRepository.DecreaseQuantityAsync(item.Product.ProductId, item.Quantity);
             }
             await _context.SaveChangesAsync();
 
@@ -364,6 +368,7 @@ namespace ThoiTrangNam.Controllers
                         Price = item.Product.SellPrice
                     };
                     _context.OrderDetails.Add(orderDetail);
+                    await _productRepository.DecreaseQuantityAsync(item.Product.ProductId, item.Quantity);
                 }
                 await _context.SaveChangesAsync();
 

@@ -11,6 +11,7 @@ using ThoiTrangNam.Repository;
 using System.Runtime.Loader;
 using System.Reflection;
 using ThoiTrangNam.Helper;
+using System.Configuration;
 
 
 var builder = WebApplication.CreateBuilder(args);
@@ -38,6 +39,8 @@ builder.Services.AddScoped<IProductImageRepository, EFProductImageRepository>();
 builder.Services.AddScoped<IOrderRepository, EFOrderRepository>();
 builder.Services.AddScoped<IOrderDetailRepository, EFOrderDetailRepository>();
 builder.Services.AddSingleton<IVnPayService, EFVnPayService>();
+builder.Services.AddTransient<IEmailSender, EmailSender>();
+builder.Services.Configure<EmailSettings>(builder.Configuration.GetSection("EmailSettings"));
 //use DinktoPDF 
 builder.Services.AddSingleton(typeof(IConverter), new SynchronizedConverter(new PdfTools()));
 // Add services to the container.
