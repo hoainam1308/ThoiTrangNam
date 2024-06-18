@@ -1,0 +1,40 @@
+﻿@model IEnumerable<ThoiTrangNam.Models.Product>
+@{
+    ViewData["Title"] = "IndexSome";
+}
+@foreach (var item in Model)
+{
+    <div class="product-item bg-light">
+        <div class="product-img position-relative overflow-hidden">
+            <img class="img-fluid w-100" src=@item.ImageUrl alt="">
+            <div class="product-action">
+                <a asp-controller="Cart" asp-action="AddToCart" asp-route-productId="@item.ProductId" class="btn btn-outline-dark btn-square"><i class="fa fa-shopping-cart"></i></a>
+            </div>
+        </div>
+        <div class="text-center py-4">
+            <a class="h6 text-decoration-none text-truncate" asp-action="Details" asp-route-id="@item.ProductId">
+                @if (!string.IsNullOrEmpty(item.ProductName) && item.ProductName.Length > 20)
+                {
+                    string parameterValue = item.ProductName.ToString().Substring(0, 20);
+
+                    @Html.DisplayFor(modelItem => parameterValue)
+
+                    @:...
+                }
+                else
+                {
+                    @Html.DisplayFor(modelItem => item.ProductName)
+                }
+            </a>
+            <div class="d-flex align-items-center justify-content-center mt-2">
+                <h5>@item.SellPrice.ToString("#,##0") VNĐ</h5>
+            </div>
+            <small class="fa fa-star text-primary mr-1"></small>
+            <small class="fa fa-star text-primary mr-1"></small>
+            <small class="fa fa-star text-primary mr-1"></small>
+            <small class="far fa-star text-primary mr-1"></small>
+            <small class="far fa-star text-primary mr-1"></small>
+            <small>(99)</small>
+        </div>
+    </div>
+}

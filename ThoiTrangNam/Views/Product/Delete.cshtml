@@ -1,0 +1,13 @@
+﻿@model ThoiTrangNam.Models.Product
+@{
+    ViewData["Title"] = "Delete";
+    Layout = "~/Views/Shared/_LayoutAdmin.cshtml";
+}
+<div style="padding-left:150px;">
+    <h3>Bạn có chắc muốn xóa sản phẩm này</h3>
+    <form asp-action="Delete">
+        <input type="hidden" asp-for="ProductId" />
+        <input type="submit" value="Xóa" class="btn btn-danger" />
+        <a asp-action="Index" class="btn btn-secondary">Trở lại</a>
+    </form>
+</div>

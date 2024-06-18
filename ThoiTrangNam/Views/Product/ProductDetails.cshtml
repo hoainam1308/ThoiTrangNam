@@ -1,0 +1,76 @@
+﻿@model ThoiTrangNam.Models.Product
+@{
+	ViewData["Title"] = "Details";
+	Layout = "~/Views/Shared/_LayoutAdmin.cshtml";
+}
+<div style="padding-left:100px;">
+	<h4 class="text-center">Chi tiết sản phẩm</h4>
+	<hr />
+	<dl class="row justify-content-center">
+		<dt class="col-sm-3 text-right">
+			@Html.DisplayNameFor(model => model.ProductName)
+		</dt>
+		<dd class="col-sm-9">
+			@Html.DisplayFor(model => model.ProductName)
+		</dd>
+		<dt class="col-sm-3 text-right">
+			@Html.DisplayNameFor(model => model.BuyPrice)
+		</dt>
+		<dd class="col-sm-9">
+			<p>
+				@Model.BuyPrice.ToString("#,##0") VNĐ
+			</p>
+		</dd>
+		<dt class="col-sm-3 text-right">
+			@Html.DisplayNameFor(model => model.SellPrice)
+		</dt>
+		<dd class="col-sm-9">
+			<p>
+				@Model.SellPrice.ToString("#,##0") VNĐ
+			</p>
+		</dd>
+		<dt class="col-sm-3 text-right">
+			@Html.DisplayNameFor(model => model.Quantity)
+		</dt>
+		<dd class="col-sm-9">
+			@Html.DisplayFor(model => model.Quantity)
+		</dd>
+		<dt class="col-sm-3 text-right">
+			@Html.DisplayNameFor(model => model.Category)
+		</dt>
+		<dd class="col-sm-9">
+			@Html.DisplayFor(model => model.Category.CategoryName)
+		</dd>
+		<dt class="col-sm-3 text-right">
+			@Html.DisplayNameFor(model => model.ImageUrl)
+		</dt>
+		<dd class="col-sm-9 text-center">
+			<img src="@Html.DisplayFor(model => model.ImageUrl)" class="img-fluid" style="max-width: 280px;" />
+			<div class="row justify-content-center mt-3">
+				@if (Model.Images.Count > 0)
+				{
+					@foreach (var image in Model.Images)
+					{
+						<div class="col-sm-4 mb-2">
+							<img src="@image.Url" class="img-fluid" style="max-width: 200px;" />
+						</div>
+					}
+				}
+				else
+				{
+					<p class="text-center">No other images available.</p>
+				}
+			</div>
+		</dd>
+	</dl>
+
+
+	<div>
+		<div class="btn-group" role="group">
+			<a asp-action="Edit" asp-route-id="@Model?.ProductId" class="btn btn-primary">Sửa</a> 
+			<a asp-action="Delete" asp-route-id="@Model?.ProductId" class="btn btn-danger">Xóa</a> 
+			<a asp-action="Index" class="btn btn-secondary">Trở lại</a>
+		</div>
+	</div>
+</div>
+

@@ -1,0 +1,79 @@
+﻿@model ThoiTrangNam.Models.Product
+@{
+    ViewData["Title"] = "Edit";
+    Layout = "~/Views/Shared/_LayoutAdmin.cshtml";
+
+}
+<div style="padding-left:300px;">
+    <h4>Sửa sản phẩm</h4>
+    <hr />
+    <div class="row">
+        <div class="col-md-8">
+            <form asp-action="Edit" enctype="multipart/form-data">
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                <input type="hidden" asp-for="ProductId" />
+                <!-- Céc View Name, Price, Description -->
+                <div class="form-group">
+                    <label asp-for="ProductName"></label>
+                    <input asp-for="ProductName" class="form-control" />
+                    <span asp-validation-for="ProductName" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="BuyPrice"></label>
+                    <input asp-for="BuyPrice" class="form-control" />
+                    <span asp-validation-for="BuyPrice" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="SellPrice"></label>
+                    <input asp-for="SellPrice" class="form-control" />
+                    <span asp-validation-for="SellPrice" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="Quantity"></label>
+                    <input asp-for="Quantity" class="form-control" />
+                    <span asp-validation-for="Quantity" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="TextDescription"></label>
+                    <textarea asp-for="TextDescription" class="form-control"></textarea>
+                    <span asp-validation-for="TextDescription" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="Description"></label>
+                    <textarea asp-for="Description" class="form-control" id="description"></textarea>
+                    <span asp-validation-for="Description" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="ImageUrl" class="control-lable"></label>
+                    <input type="file" asp-for="ImageUrl" class="form-control" />
+                    <span asp-validation-for="ImageUrl" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="CategoryId" class="control-lable"></label>
+                    <select asp-for="CategoryId" asp-items="ViewBag.Categories" class="form-control"></select>
+                    <span asp-validation-for="CategoryId" class="text-danger"></span>
+                </div>
+                <br />
+                <div class="form-group">
+                    <input type="submit" value="Sửa" class="btn btn-primary" />
+                </div>
+            </form>
+        </div>
+    </div>
+    <div>
+        <a asp-action="Index" class="btn btn-secondary">Trở về</a>
+    </div>
+    @section Scripts {
+        <script>
+            ClassicEditor
+                .create(document.querySelector('#description'), {
+                    ckfinder: {
+                        uploadUrl: '@Url.Action("UploadImage", "Product")' // Đảm bảo URL là chính xác
+                    }
+                })
+                .catch(error => {
+                    console.error(error);
+                });
+        </script>
+    }
+</div>

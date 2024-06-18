@@ -1,0 +1,68 @@
+﻿@model IEnumerable<ThoiTrangNam.Models.Order>
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title>Orders</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        th, td {
+            border: 1px solid #dddddd;
+            text-align: left;
+            padding: 8px;
+        }
+
+        th {
+            background-color: #f2f2f2;
+        }
+
+        tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+
+        tr:hover {
+            background-color: #f1f1f1;
+        }
+
+        td svg {
+            vertical-align: middle;
+        }
+    </style>
+</head>
+<body>
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Customer Name</th>
+                <th>Phone Number</th>
+                <th>Shipping Address</th>
+                <th>Order Date</th>
+                <th>Total Price</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>@Html.DisplayFor(modelItem => item.CustomerName)</td>
+                    <td>@Html.DisplayFor(modelItem => item.PhoneNumber)</td>
+                    <td>@Html.DisplayFor(modelItem => item.ShippingAddress)</td>
+                    <td>@Html.DisplayFor(modelItem => item.OrderDate)</td>
+                    <td>@item.TotalPrice.ToString("#,##0") VNĐ</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</body>
+</html>

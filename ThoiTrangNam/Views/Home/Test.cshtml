@@ -1,0 +1,41 @@
+﻿@{
+    int num = 1;
+}
+<div class="input-group quantity mr-3" style="width: 130px;">
+    <div class="input-group-btn">
+        <button class="btn btn-primary btn-minus" data-counter="@num">
+            <i class="fa fa-minus"></i>
+        </button>
+    </div>
+    <input type="text" class="form-control bg-secondary border-0 text-center" value="1">
+    <div class="input-group-btn">
+        <button class="btn btn-primary btn-plus" data-counter="@num">
+            <i class="fa fa-plus"></i>
+        </button>
+    </div>
+    <p class="counter">@num</p>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        var btnPlus = document.querySelector('.btn-plus');
+        var btnMinus = document.querySelector('.btn-minus');
+        var counter = document.querySelector('.counter');
+
+        btnPlus.addEventListener('click', function () {
+            var num = parseInt(counter.textContent);
+            num++;
+            counter.textContent = num;
+            btnPlus.setAttribute('data-counter', num);
+        });
+
+        btnMinus.addEventListener('click', function () {
+            var num = parseInt(counter.textContent);
+            if (num > 0) {
+                num--;
+                counter.textContent = num;
+                btnMinus.setAttribute('data-counter', num);
+            }
+        });
+    });
+</script>

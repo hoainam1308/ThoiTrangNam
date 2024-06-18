@@ -1,0 +1,16 @@
+﻿@using Microsoft.AspNetCore.Identity
+@using ThoiTrangNam.Repository
+@inject UserManager<ApplicationUser> UserManager
+@inject IOrderRepository _orderRepository
+
+@{
+    var user = await UserManager.GetUserAsync(User);
+    int numOfOrder = 0;
+    if (user != null)
+    {
+        var orderList = await _orderRepository.GetNeedNotificationToUserAsync(user.Id);
+        numOfOrder = orderList.Count();
+    }
+}
+<span class="badge text-secondary border border-secondary rounded-circle"
+      style="padding-bottom: 2px;">@numOfOrder</span>
