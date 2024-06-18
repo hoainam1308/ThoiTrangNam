@@ -5,16 +5,17 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.WebUtilities;
 using System.ComponentModel.DataAnnotations;
 using System.Text;
+using System.Threading.Tasks;
 using ThoiTrangNam.Models;
 
 namespace ThoiTrangNam.Areas.Identity.Pages.Account
 {
     [AllowAnonymous]
-    public class ResetPassword : PageModel
+    public class ResetPasswordModel : PageModel
     {
         private readonly UserManager<ApplicationUser> _userManager;
 
-        public ResetPassword(UserManager<ApplicationUser> userManager)
+        public ResetPasswordModel(UserManager<ApplicationUser> userManager)
         {
             _userManager = userManager;
         }
@@ -52,8 +53,6 @@ namespace ThoiTrangNam.Areas.Identity.Pages.Account
             {
                 Input = new InputModel
                 {
-                    // Giải mã lại code từ code trong url (do mã này khi gửi mail
-                    // đã thực hiện Encode bằng WebEncoders.Base64UrlEncode)
                     Code = Encoding.UTF8.GetString(WebEncoders.Base64UrlDecode(code))
                 };
                 return Page();
@@ -67,19 +66,16 @@ namespace ThoiTrangNam.Areas.Identity.Pages.Account
                 return Page();
             }
 
-            // Tìm User theo email
             var user = await _userManager.FindByEmailAsync(Input.Email);
             if (user == null)
             {
-                // Không thấy user
                 return RedirectToPage("./ResetPasswordConfirmation");
             }
-            // Đặt lại passowrd chu user - có kiểm tra mã token khi đổi
+
             var result = await _userManager.ResetPasswordAsync(user, Input.Code, Input.Password);
 
             if (result.Succeeded)
             {
-                // Chuyển đến trang thông báo đã reset thành công
                 return RedirectToPage("./ResetPasswordConfirmation");
             }
 

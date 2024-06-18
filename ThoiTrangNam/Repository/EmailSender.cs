@@ -1,6 +1,7 @@
 ﻿using Microsoft.Extensions.Options;
 using System.Net.Mail;
 using System.Net;
+using System.Threading.Tasks;
 
 namespace ThoiTrangNam.Repository
 {
@@ -15,15 +16,9 @@ namespace ThoiTrangNam.Repository
 
         public async Task SendEmailAsync(string email, string subject, string htmlMessage)
         {
-            var client = new SmtpClient(_emailSettings.Host, _emailSettings.Port)
-            {
-                Credentials = new NetworkCredential(_emailSettings.Username, _emailSettings.Password),
-                EnableSsl = _emailSettings.EnableSSL,
-            };
-
             var mailMessage = new MailMessage
             {
-                From = new MailAddress(_emailSettings.Username),
+                From = new MailAddress(_emailSettings.SenderEmail, _emailSettings.SenderName),
                 Subject = subject,
                 Body = htmlMessage,
                 IsBodyHtml = true,
@@ -31,16 +26,20 @@ namespace ThoiTrangNam.Repository
 
             mailMessage.To.Add(email);
 
-            await client.SendMailAsync(mailMessage);
-        }
-    }
+            using var client = new SmtpClient(_emailSettings.Host, _emailSettings.Port)
+            {
+                Credentials = new NetworkCredential(_emailSettings.Username, _emailSettings.Password),
+                EnableSsl = _emailSettings.EnableSSL
+            };
 
-    public class EmailSettings
-    {
-        public string Host { get; set; }
-        public int Port { get; set; }
-        public string Username { get; set; }
-        public string Password { get; set; }
-        public bool EnableSSL { get; set; }
+            try
+            {
+                await client.SendMailAsync(mailMessage);
+            }
+            catch (Exception ex)
+            {
+                throw new InvalidOperationException($"Failed to send email: {ex.Message}", ex);
+            }
+        }
     }
 }
