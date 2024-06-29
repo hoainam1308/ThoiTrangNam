@@ -43,17 +43,18 @@ namespace ThoiTrangNam.Areas.Identity.Pages.Account
             public string Code { get; set; }
         }
 
-        public IActionResult OnGet(string code = null)
+        public IActionResult OnGet(string code = null, string email = null)
         {
-            if (code == null)
+            if (code == null || email == null)
             {
-                return BadRequest("Mã token không có.");
+                return BadRequest("Mã token hoặc email không có.");
             }
             else
             {
                 Input = new InputModel
                 {
-                    Code = Encoding.UTF8.GetString(WebEncoders.Base64UrlDecode(code))
+                    Code = Encoding.UTF8.GetString(WebEncoders.Base64UrlDecode(code)),
+                    Email = email
                 };
                 return Page();
             }

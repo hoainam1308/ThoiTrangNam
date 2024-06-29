@@ -23,7 +23,7 @@ namespace ThoiTrangNam.Areas.Identity.Pages.Account
             _userManager = userManager;
             _emailSender = emailSender;
             _signInManager = signInManager;
-        }   
+        }
 
         [BindProperty]
         public InputModel Input { get; set; }
@@ -43,18 +43,16 @@ namespace ThoiTrangNam.Areas.Identity.Pages.Account
                 var user = await _userManager.FindByEmailAsync(Input.Email);
                 if (user == null || !(await _userManager.IsEmailConfirmedAsync(user)))
                 {
-                    // User không tồn tại hoặc chưa xác nhận email
                     ModelState.AddModelError(string.Empty, "Email không tồn tại hoặc chưa được xác nhận.");
                     return Page();
                 }
 
-                // Email hợp lệ, gửi email reset password
                 var code = await _userManager.GeneratePasswordResetTokenAsync(user);
                 code = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(code));
                 var callbackUrl = Url.Page(
                     "/Account/ResetPassword",
                     pageHandler: null,
-                    values: new { area = "Identity", code},
+                    values: new { area = "Identity", code, email = Input.Email },
                     protocol: Request.Scheme);
 
                 await _emailSender.SendEmailAsync(

@@ -12,11 +12,13 @@ using System.Runtime.Loader;
 using System.Reflection;
 using ThoiTrangNam.Helper;
 using System.Configuration;
+using Microsoft.AspNetCore.Authentication;
+using System.Security.Claims;
 
 
 var builder = WebApplication.CreateBuilder(args);
 builder.Configuration.AddJsonFile("appsettings.json");
-builder.Services.AddDbContext<ApplicationDbContext>(options => 
+builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
 builder.Services.AddIdentity<ApplicationUser, IdentityRole>()
@@ -65,7 +67,12 @@ builder.Services.AddSingleton(x =>
     )
 );
 
-builder.Services.AddAuthentication().AddFacebook(opt =>
+builder.Services.AddAuthentication(options =>
+{
+    options.DefaultAuthenticateScheme = IdentityConstants.ApplicationScheme;
+    options.DefaultChallengeScheme = IdentityConstants.ApplicationScheme;
+})
+.AddFacebook(opt =>
 {
     opt.ClientId = "1022879035835933";
     opt.ClientSecret = "bb5d93a484093b624a3ff63efaf8d95b";
@@ -74,17 +81,43 @@ builder.Services.AddAuthentication().AddFacebook(opt =>
         context.Response.Redirect(context.RedirectUri + "&prompt=select_account");
         return Task.CompletedTask;
     };
-
-});
-builder.Services.AddAuthentication().AddGoogle(opt =>
+})
+.AddGoogle(opt =>
 {
     opt.ClientId = "615825067142-4hpk11pq924ur6ktdoi6tb5q8npuuf33.apps.googleusercontent.com";
     opt.ClientSecret = "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";
-    opt.Events.OnRedirectToAuthorizationEndpoint = (context) =>
+    opt.Scope.Add("openid");
+    opt.Scope.Add("profile");
+    opt.Scope.Add("email");
+    opt.SaveTokens = true;
+    opt.Events.OnCreatingTicket = ctx =>
     {
-        context.Response.Redirect(context.RedirectUri + "&prompt=select_account");
+        var tokens = ctx.Properties.GetTokens().ToList();
+        tokens.Add(new AuthenticationToken()
+        {
+            Name = "TicketCreated",
+            Value = DateTime.UtcNow.ToString()
+        });
+        ctx.Properties.StoreTokens(tokens);
         return Task.CompletedTask;
     };
+})
+.AddOpenIdConnect("oidc", options =>
+{
+    options.Authority = "https://accounts.google.com";
+    options.ClientId = "780876644624-o10ovojracsg2f46ono11n5friv8o1ap.apps.googleusercontent.com";
+    options.ClientSecret = "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";
+    options.ResponseType = "code";
+    options.SaveTokens = true;
+    options.CallbackPath = "/signin-oidc";
+    options.Scope.Add("openid");
+    options.Scope.Add("profile");
+    options.Scope.Add("email");
+    options.ClaimActions.MapJsonKey(ClaimTypes.GivenName, "given_name");
+    options.ClaimActions.MapJsonKey(ClaimTypes.Surname, "family_name");
+    options.ClaimActions.MapJsonKey(ClaimTypes.Email, "email");
+    options.ClaimActions.MapJsonKey(ClaimTypes.MobilePhone, "phone_number");
+    options.ClaimActions.MapJsonKey(ClaimTypes.StreetAddress, "address");
 });
 var app = builder.Build();
 

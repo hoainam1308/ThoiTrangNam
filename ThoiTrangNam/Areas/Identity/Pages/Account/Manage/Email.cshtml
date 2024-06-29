@@ -1,0 +1,29 @@
+﻿@page
+@model ThoiTrangNam.Areas.Identity.Pages.Account.Manage.EmailModel
+@{
+    ViewData["Title"] = "Manage Email";
+}
+
+<h1>@ViewData["Title"]</h1>
+
+<p>@Model.StatusMessage</p>
+
+<div class="form-group">
+    <div class="input-group mb-3">
+        <div class="input-group-prepend">
+            <span class="input-group-text" id="basic-addon1">Email:</span>
+        </div>
+        <input type="email" id="email" class="form-control" value="@Model.Email" readonly aria-describedby="basic-addon1" />
+    </div>
+    @if (Model.IsEmailConfirmed)
+    {
+        <small class="form-text text-muted">Email đã được xác thực.</small>
+    }
+</div>
+
+@if (!Model.IsEmailConfirmed)
+{
+    <form method="post" asp-page-handler="SendVerificationEmail">
+        <button type="submit" class="btn btn-primary">Gửi xác nhận</button>
+    </form>
+}
