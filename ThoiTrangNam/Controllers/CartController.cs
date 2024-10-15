@@ -10,6 +10,7 @@ using ThoiTrangNam.Repository;
 using Microsoft.DiaSymReader;
 using ThoiTrangNam.Helper;
 using Microsoft.VisualBasic;
+using static Azure.Core.HttpHeader;
 
 namespace ThoiTrangNam.Controllers
 {
@@ -129,7 +130,7 @@ namespace ThoiTrangNam.Controllers
             // Áp dụng coupon vào giỏ hàng
             cart.ApplyCoupon(coupon);
             HttpContext.Session.SetObjectAsJson("cart", cart);
-            TempData["DiscountMessage"] = $"Đã giảm: -{coupon.DiscountAmount.ToString("#,##0")} VNĐ";
+            TempData["DiscountMessage"] = $"Đã giảm: {coupon.DiscountAmount.ToString("#,##0")}%";
 
             TempData["Message"] = "Áp dụng coupon thành công.";
             return RedirectToAction("Index");
@@ -148,10 +149,7 @@ namespace ThoiTrangNam.Controllers
         [HttpPost]
         public async Task<IActionResult> Checkout(Order order, string payment = "Dat hang(COD)")
         {
-
-
-
-
+          
             var cart = HttpContext.Session.GetObjectFromJson<Cart>("cart");
             if (cart == null || cart.Items.Count == 0)
             {
@@ -167,9 +165,10 @@ namespace ThoiTrangNam.Controllers
                     await _context.SaveChangesAsync();
                 }
             }
-            
+           
             // Lưu thông tin đơn hàng
             var user = await _userManager.GetUserAsync(User);
+           
             if (payment == "Thanh toan VNPAY")
             {
                 var vnPayModel = new VnPaymentResquestModel
@@ -179,6 +178,7 @@ namespace ThoiTrangNam.Controllers
                     Description = "Thanh toán đơn hàng",
                     FullName = user.UserName,
                     OrderId = new Random().Next(1000, 10000)
+                    
                 };
                 return Redirect(_vnpayRepository.CreatePaymentUrl(vnPayModel, HttpContext));
             }
@@ -186,7 +186,7 @@ namespace ThoiTrangNam.Controllers
             order.OrderDate = DateTime.UtcNow;
             order.SubTotal = cart.ComputeToTalValue();
             order.TotalPrice = cart.ComputeToTotal();
-            order.IsPaymented = true;
+            TempData["OrderNotes"] = order.Notes;
 
             _context.Orders.Add(order);
             await _context.SaveChangesAsync();
@@ -248,7 +248,7 @@ namespace ThoiTrangNam.Controllers
             }
 
             // Tạo đơn hàng mới và lưu vào cơ sở dữ liệu
-            var user = await _userManager.GetUserAsync(User);
+                var user = await _userManager.GetUserAsync(User);
             var order = new Order
             {
                 UserId = user.Id,
@@ -258,7 +258,8 @@ namespace ThoiTrangNam.Controllers
                 CustomerName = user.FullName,
                 PhoneNumber = user.PhoneNumber,
                 ShippingAddress = user.Address,
-                IsPaymented = true
+                IsPaymented = true,
+                Notes = TempData["OrderNotes"] as string
                 // Thêm các thông tin khác của đơn hàng nếu cần
             };
 
@@ -350,10 +351,10 @@ namespace ThoiTrangNam.Controllers
                     CustomerName = user.FullName,
                     PhoneNumber = user.PhoneNumber,
                     ShippingAddress = user.Address,
-                    IsPaymented = true
+                    IsPaymented = true,
+                    Notes = TempData["OrderNotes"] as string
                     // Thêm các thông tin khác của đơn hàng nếu cần
                 };
-
                 _context.Orders.Add(order);
                 await _context.SaveChangesAsync();
 

@@ -88,9 +88,10 @@ namespace ThoiTrangNam.Controllers
                 using (SmtpClient client = new SmtpClient("smtp.gmail.com", 587))
                 {
                     client.EnableSsl = true;
-                    client.Credentials = new NetworkCredential(sendMailDTO.Email, sendMailDTO.Password);
-                    string subject = sendMailDTO.Name + " " + sendMailDTO.Subject;
-                    MailMessage message = new MailMessage(sendMailDTO.Email, StaticClass.MyEmail, subject, sendMailDTO.Message);
+                    client.Credentials = new NetworkCredential(StaticClass.FromEmail, StaticClass.Password);
+                    string subject = sendMailDTO.Email +" - "+ sendMailDTO.Name + " " + sendMailDTO.Subject;
+                    string mess = sendMailDTO.Message;
+                    MailMessage message = new MailMessage(StaticClass.FromEmail, StaticClass.MyEmail, subject, mess);
                     client.Send(message);
                     ViewBag.Message = "Mail Send";
                     return RedirectToAction("Index");
