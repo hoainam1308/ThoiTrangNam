@@ -79,5 +79,5 @@ MEN FASHION là nền tảng website trực tuyến cung cấp các sản phẩm
   ![image](Readme/h28.png)
 
 ## Thành viên
-- [Trần Hoài Nam](#https://github.com/hoainam1308) - Team Leader/Fullstack
-- [Hoàng Châu Phúc Thuận](#https://github.com/AlivRick) - Fullstack
+- [Trần Hoài Nam](#github.com/hoainam1308) - Team Leader/Fullstack
+- [Hoàng Châu Phúc Thuận](#github.com/AlivRick) - Fullstack
