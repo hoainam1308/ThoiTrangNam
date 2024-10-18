@@ -78,5 +78,6 @@ MEN FASHION là nền tảng website trực tuyến cung cấp các sản phẩm
 - Tùy chỉnh mô tả sản phẩm chi tiết
   ![image](Readme/h28.png)
 
-## Liên hệ
-Nếu có bất kỳ thắc mắc hoặc góp ý nào, vui lòng liên hệ qua email của chúng tôi.
+## Thành viên
+- [Trần Hoài Nam](#github.com/hoainam1308) - Team Leader/Fullstack
+- [Hoàng Châu Phúc Thuận](#github.com/hoainam1308) - Fullstack
